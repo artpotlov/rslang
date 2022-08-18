@@ -1,0 +1,61 @@
+{
+  "name": "rslang",
+  "version": "1.0.0",
+  "description": "RS Lang app",
+  "private": "true",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development webpack serve --open",
+    "build": "cross-env NODE_ENV=production webpack build",
+    "lint": "eslint --ext .ts src/",
+    "lint:fix": "eslint --ext .ts src/ --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run lint:fix"
+    ]
+  },
+  "author": "Artem Potlov, Aleksandr Shustov, Svyatoslav Shchipunov",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.2",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "autoprefixer": "^10.4.8",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-webpack-plugin": "^3.2.0",
+    "handlebars-loader": "^1.7.2",
+    "html-loader": "^4.1.0",
+    "html-webpack-plugin": "^5.5.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "mini-css-extract-plugin": "^2.6.1",
+    "postcss": "^8.4.16",
+    "postcss-loader": "^7.0.1",
+    "prettier": "^2.7.1",
+    "sass": "^1.54.4",
+    "sass-loader": "^13.0.2",
+    "style-loader": "^3.3.1",
+    "tailwindcss": "^3.1.8",
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.10.0"
+  },
+  "dependencies": {
+    "vanilla-router": "^1.2.8"
+  }
+}
