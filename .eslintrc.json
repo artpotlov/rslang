@@ -26,5 +26,5 @@
         "import/prefer-default-export": "off",
         "prettier/prettier": "error"
     },
-    "ignorePatterns": ["*.config.js"]
+    "ignorePatterns": ["webpack.config.js"]
 }
