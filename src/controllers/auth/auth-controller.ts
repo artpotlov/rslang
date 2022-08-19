@@ -109,25 +109,27 @@ const clickEvent = (
   templateLogin: HTMLTemplateElement,
   templateRegistration: HTMLTemplateElement,
 ) => {
-  if (target instanceof HTMLButtonElement) {
-    switch (target.dataset.role) {
-      case 'auth__btn-form-login':
-        setFormView(authContentElement, templateLogin);
-        break;
-      case 'auth__btn-form-registration':
-        setFormView(authContentElement, templateRegistration);
-        break;
-      case 'auth__btn-login':
-        updateBtnView(target, true);
-        sendLoginForm();
-        break;
-      case 'auth__btn-registration':
-        updateBtnView(target, true);
-        sendRegistrationForm();
-        break;
-      default:
-        break;
-    }
+  if (!(target instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  switch (target.dataset.role) {
+    case 'auth__btn-form-login':
+      setFormView(authContentElement, templateLogin);
+      break;
+    case 'auth__btn-form-registration':
+      setFormView(authContentElement, templateRegistration);
+      break;
+    case 'auth__btn-login':
+      updateBtnView(target, true);
+      sendLoginForm();
+      break;
+    case 'auth__btn-registration':
+      updateBtnView(target, true);
+      sendRegistrationForm();
+      break;
+    default:
+      break;
   }
 };
 
