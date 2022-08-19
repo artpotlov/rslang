@@ -1,4 +1,10 @@
-import { ICreateUserResponse, ISignInResponse, RequestMethod } from '../types/types';
+import {
+  IBaseUser,
+  ICreateUser,
+  ICreateUserResponse,
+  ISignInResponse,
+  RequestMethod,
+} from '../types/types';
 
 const API_URL = 'https://rslang-team-sixteen.herokuapp.com';
 
@@ -14,14 +20,13 @@ const getRequestParams = (
   };
 };
 
+export const signIn = async (user: IBaseUser): Promise<ISignInResponse> => {
   const url = `${API_URL}/signin`;
-  const params: RequestInit = {
-    method: RequestMethod.POST,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
+  const headers = {
+    'Content-Type': 'application/json',
   };
+  const body = JSON.stringify(user);
+  const params = getRequestParams(RequestMethod.POST, headers, body);
 
   const response = await fetch(url, params);
 
@@ -38,19 +43,13 @@ const getRequestParams = (
   };
 };
 
-export const createNewUser = async (
-  name: string,
-  email: string,
-  password: string,
-): Promise<ICreateUserResponse> => {
+export const createNewUser = async (user: ICreateUser): Promise<ICreateUserResponse> => {
   const url = `${API_URL}/users`;
-  const params: RequestInit = {
-    method: RequestMethod.POST,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ name, email, password }),
+  const headers = {
+    'Content-Type': 'application/json',
   };
+  const body = JSON.stringify(user);
+  const params = getRequestParams(RequestMethod.POST, headers, body);
 
   const response = await fetch(url, params);
 

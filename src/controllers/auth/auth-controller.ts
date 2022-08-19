@@ -46,7 +46,7 @@ const sendLoginForm = async () => {
   const emailValue = inputEmailElement.value.trim();
   const passwordValue = inputPasswordElement.value.trim();
 
-  const result = await signIn(emailValue, passwordValue);
+  const result = await signIn({ email: emailValue, password: passwordValue });
 
   switch (result.status) {
     case 200:
@@ -88,7 +88,11 @@ const sendRegistrationForm = async () => {
   const emailValue = inputEmailElement.value.trim();
   const passwordValue = inputPasswordElement.value.trim();
 
-  const result = await createNewUser(nameValue, emailValue, passwordValue);
+  const result = await createNewUser({
+    name: nameValue,
+    email: emailValue,
+    password: passwordValue,
+  });
 
   switch (result.status) {
     case 200:
