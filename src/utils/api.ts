@@ -2,7 +2,18 @@ import { ICreateUserResponse, ISignInResponse, RequestMethod } from '../types/ty
 
 const API_URL = 'https://rslang-team-sixteen.herokuapp.com';
 
-export const signIn = async (email: string, password: string): Promise<ISignInResponse> => {
+const getRequestParams = (
+  method: RequestMethod,
+  headers: HeadersInit,
+  body: BodyInit,
+): RequestInit => {
+  return {
+    method,
+    headers,
+    body,
+  };
+};
+
   const url = `${API_URL}/signin`;
   const params: RequestInit = {
     method: RequestMethod.POST,
