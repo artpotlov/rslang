@@ -23,12 +23,14 @@ export interface IErrorBody {
   message: string;
 }
 
-export interface ICreateUser {
-  name: string;
+export interface IBaseUser {
   email: string;
   password: string;
 }
 
+export interface ICreateUser extends IBaseUser {
+  name: string;
+}
 export interface ICreateUserError {
   error: {
     status: string;
