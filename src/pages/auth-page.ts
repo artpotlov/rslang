@@ -12,8 +12,7 @@ export const initAuth = (element: HTMLElement) => {
   }
 
   const rootElement = element;
-  rootElement.innerHTML = '';
-  rootElement.innerHTML += authTemplate();
+  rootElement.innerHTML = authTemplate();
 
   initAuthController();
 };
