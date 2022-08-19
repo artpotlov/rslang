@@ -1,0 +1,54 @@
+<section class="flex w-screen h-screen" data-role="auth">
+  <div class="w-1/2 h-full flex justify-center items-center bg-indigo-300"></div>
+  <div class="w-1/2 h-full flex justify-center items-center">
+    <div class="flex flex-col gap-4" data-role="auth__content"></div>
+  </div>
+</section>
+
+<template data-role="auth__template-login">
+  <h2 class="text-3xl text-center">Авторизация</h2>
+  <form class="flex flex-col gap-3">
+    <div>
+      <label class="block text-xs mb-1">Email</label>
+      <input type="email" placeholder="Введите email" data-role="auth__input-email" required>
+    </div>
+    <div>
+      <label class="block text-xs mb-1">Пароль</label>
+      <input type="password" placeholder="Введите пароль" data-role="auth__input-password" required>
+    </div>
+    <button data-role="auth__btn-login"
+      class="px-2 py-2 bg-indigo-500 rounded text-white transition-colors hover:bg-indigo-400 active:bg-indigo-600 disabled:bg-indigo-500">Войти</button>
+  </form>
+  <div class="hidden text-red-500" data-role="auth__message">Неверный логин или пароль</div>
+  <div>
+    <p class="text-slate-400">Ещё нет аккаунта? <button data-role="auth__btn-form-registration"
+        class="inline-block font-bold text-indigo-600 transition-colors hover:text-indigo-400 active:text-indigo-600">Создать</button>
+    </p>
+  </div>
+</template>
+
+<template data-role="auth__template-registration">
+  <h2 class="text-3xl text-center">Регистрация</h2>
+  <form class="flex flex-col gap-3">
+    <div>
+      <label class="block text-xs mb-1">Имя пользователя</label>
+      <input type="text" placeholder="Введите имя пользователя" data-role="auth__input-name" required>
+    </div>
+    <div>
+      <label class="block text-xs mb-1">Email</label>
+      <input type="email" placeholder="Введите email" data-role="auth__input-email" required>
+    </div>
+    <div>
+      <label class="block text-xs mb-1">Пароль</label>
+      <input type="password" placeholder="Введите пароль" data-role="auth__input-password" required minlength="8">
+    </div>
+    <button data-role="auth__btn-registration"
+      class="px-2 py-2 bg-indigo-500 rounded text-white transition-colors hover:bg-indigo-400 active:bg-indigo-600">Создать аккаунт</button>
+  </form>
+  <div class="hidden text-red-500" data-role="auth__message">Введены неккоректные данные</div>
+  <div>
+    <p class="text-slate-400">Есть аккаунт? <button data-role="auth__btn-form-login"
+        class="inline-block font-bold text-indigo-600 transition-colors hover:text-indigo-400 active:text-indigo-600">Войти</button>
+    </p>
+  </div>
+</template>
