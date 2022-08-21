@@ -1,3 +1,5 @@
+import { urlChanger } from '../urlChanger';
+
 const clickEvent = (target: EventTarget, element: HTMLElement) => {
   if (!(target instanceof HTMLElement)) {
     return;
@@ -9,6 +11,10 @@ const clickEvent = (target: EventTarget, element: HTMLElement) => {
       break;
     case 'header__menu-link':
       element.classList.remove('open');
+      break;
+    case 'header__btn-auth':
+      if (element.classList.contains('open')) element.classList.remove('open');
+      urlChanger('#auth');
       break;
     default:
       break;
