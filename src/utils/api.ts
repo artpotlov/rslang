@@ -2,8 +2,10 @@ import {
   IBaseUser,
   ICreateUser,
   ICreateUserResponse,
+  IObjectString,
   ISignInResponse,
   RequestMethod,
+  TDataDictionaryResponse,
 } from '../types/types';
 
 const API_URL = 'https://rslang-team-sixteen.herokuapp.com';
@@ -11,7 +13,7 @@ const API_URL = 'https://rslang-team-sixteen.herokuapp.com';
 const getRequestParams = (
   method: RequestMethod,
   headers: HeadersInit,
-  body: BodyInit,
+  body?: BodyInit,
 ): RequestInit => {
   return {
     method,
@@ -53,6 +55,22 @@ export const createNewUser = async (user: ICreateUser): Promise<ICreateUserRespo
 
   const response = await fetch(url, params);
 
+  return {
+    status: response.status,
+    params: await response.json(),
+  };
+};
+
+export const getChunkWords = async (
+  sendParams: IObjectString,
+): Promise<TDataDictionaryResponse> => {
+  const queryString = new URLSearchParams(sendParams).toString();
+  const url = `${API_URL}/words?${queryString}`;
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  const params = getRequestParams(RequestMethod.GET, headers);
+  const response = await fetch(url, params);
   return {
     status: response.status,
     params: await response.json(),
