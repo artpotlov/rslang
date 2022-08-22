@@ -50,8 +50,8 @@ export interface IObjectString extends Record<string, string> {
 
 export type TDataDictionary = {
   id: string;
-  group: 0;
-  page: 0;
+  group: number;
+  page: number;
   word: string;
   image: string;
   audio: string;
