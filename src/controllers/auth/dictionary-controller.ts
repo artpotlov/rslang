@@ -1,10 +1,11 @@
 import { IObjectString, TDataDictionary } from '../../types/types';
 import { getChunkWords } from '../../utils/api';
 import templateCard from '../../components/dictionary/card.hbs';
+import { API_URL } from '../../const';
 
 const setDictionaryView = (rootElement: HTMLElement, dataDictionary: TDataDictionary) => {
   const element = rootElement;
-  element.innerHTML = templateCard({ dataDictionary });
+  element.innerHTML = templateCard({API_URL, dataDictionary });
 };
 
 export const initDictionaryController = async (paramsDictionary: IObjectString) => {

@@ -1,3 +1,4 @@
+import { API_URL } from '../const';
 import {
   IBaseUser,
   ICreateUser,
@@ -7,8 +8,6 @@ import {
   RequestMethod,
   TDataDictionaryResponse,
 } from '../types/types';
-
-const API_URL = 'https://rslang-team-sixteen.herokuapp.com';
 
 const getRequestParams = (
   method: RequestMethod,
