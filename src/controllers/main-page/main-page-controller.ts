@@ -1,6 +1,6 @@
 import { urlChanger } from '../urlChanger';
 
-const clickEvent = (target: EventTarget, element: HTMLElement) => {
+const clickHeaderEvent = (target: EventTarget, element: HTMLElement) => {
   if (!(target instanceof HTMLElement)) {
     return;
   }
@@ -24,7 +24,7 @@ const clickEvent = (target: EventTarget, element: HTMLElement) => {
 export const initEvent = (element: HTMLElement) => {
   element.addEventListener('click', (event) => {
     if (event.target) {
-      clickEvent(event.target, element);
+      clickHeaderEvent(event.target, element);
     }
   });
 };
