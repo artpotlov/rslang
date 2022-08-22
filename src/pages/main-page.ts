@@ -1,4 +1,4 @@
-import { initEvent } from '../controllers/main-page/main-page-controller';
+import { initHeaderEvent, initMainEvent } from '../controllers/main-page/main-page-controller';
 
 import header from '../components/main-page/header.hbs';
 import main from '../components/main-page/main.hbs';
@@ -16,6 +16,9 @@ export const initMainPage = (element: HTMLElement): void => {
 
   const headerContainer: HTMLElement | null = document.querySelector('.header');
   if (!headerContainer) throw new Error('headerContainer is null');
+  const mainWrap: HTMLElement | null = document.querySelector('.main');
+  if (!mainWrap) throw new Error('mainWrap is null');
 
-  initEvent(headerContainer);
+  initHeaderEvent(headerContainer);
+  initMainEvent(mainWrap);
 };

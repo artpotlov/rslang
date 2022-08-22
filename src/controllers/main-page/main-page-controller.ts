@@ -21,10 +21,28 @@ const clickHeaderEvent = (target: EventTarget, element: HTMLElement) => {
   }
 };
 
-export const initEvent = (element: HTMLElement) => {
-  element.addEventListener('click', (event) => {
+const clickMainEvent = (target: EventTarget) => {
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+
+  if (target.dataset.main === 'main__btn-about-app') {
+    urlChanger('#about-app');
+  }
+};
+
+export const initHeaderEvent = (element: HTMLElement) => {
+  element.addEventListener('click', (event: MouseEvent): void => {
     if (event.target) {
       clickHeaderEvent(event.target, element);
+    }
+  });
+};
+
+export const initMainEvent = (element: HTMLElement) => {
+  element.addEventListener('click', (event: MouseEvent): void => {
+    if (event.target) {
+      clickMainEvent(event.target);
     }
   });
 };
