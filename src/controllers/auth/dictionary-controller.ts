@@ -2,7 +2,7 @@ import { IObjectString, TDataDictionary } from '../../types/types';
 import { getChunkWords } from '../../utils/api';
 import templateCard from '../../components/dictionary/card.hbs';
 
-const setDictionaryView = async (rootElement: HTMLElement, dataDictionary: TDataDictionary) => {
+const setDictionaryView = (rootElement: HTMLElement, dataDictionary: TDataDictionary) => {
   const element = rootElement;
   element.innerHTML = templateCard({ dataDictionary });
 };
