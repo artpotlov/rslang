@@ -9,7 +9,6 @@ export const initRouter = (element: HTMLElement) => {
     .add('', () => {
       document.title = 'Main page';
       currentElement.innerHTML = '';
-      currentElement.innerHTML = `<div>Main Page</div>`;
     })
     .add('auth', () => {
       initAuth(element);
