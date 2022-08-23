@@ -1,6 +1,7 @@
 import Router from 'vanilla-router';
 import { initAuth } from '../pages/auth-page';
 import { initPage404 } from '../pages/404-page';
+import { dictionary } from '../pages/dictionary';
 
 export const initRouter = (element: HTMLElement) => {
   const currentElement = element;
@@ -20,6 +21,12 @@ export const initRouter = (element: HTMLElement) => {
     })
     .add('auth', () => {
       initAuth(element);
+    })
+    .add('dictionary', () => {
+      dictionary(element);
+    })
+    .add('dictionary/(:num)/(:num)', (group: string, page: string) => {
+      dictionary(element, { group, page });
     })
     .check()
     .addUriListener();

@@ -1,0 +1,53 @@
+{{#each dataDictionary}}
+  <div
+    class='w-[400px] flex flex-col rounded-3xl bg-gradient-to-t to-blue-300 from-white cursor-pointer relative'
+  >
+    <div class='w-full flex'>
+      <img
+        class='w-48 h-32 rounded-tl-3xl rounded-br-3xl'
+        src="{{../API_URL}}/{{image}}"
+        alt='image'
+      />
+      <div class='flex flex-col justify-center items-center grow text-xl'>
+        <div class='pb-3 text-center'>
+          <h3 class='text-3xl'>
+            {{word}}
+          </h3>
+          <span>
+            {{transcription}}
+          </span>
+        </div>
+        <span>
+          {{wordTranslate}}
+        </span>
+      </div>
+    </div>
+    <div class='px-2 py-4 flex flex-col'>
+      <div class='py-2 flex flex-col'>
+        <span>
+          {{{textMeaning}}}
+        </span>
+        <span>
+          {{textMeaningTranslate}}
+        </span>
+      </div>
+      <div class='py-2 flex flex-col'>
+        <span>
+          {{{ textExample}}}
+        </span>
+        <span>
+          {{textExampleTranslate}}
+        </span>
+      </div>
+    </div>
+    <div
+      class='w-full h-full rounded-3xl opacity-0 bg-black absolute hover:opacity-50 transition-opacity'
+    >
+      <svg height='128px' viewBox='0 0 24 24' fill='white' class='mx-auto'>
+        <path
+          d='M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z'
+        ></path>
+      </svg>
+    </div>
+  </div>
+{{/each}}
