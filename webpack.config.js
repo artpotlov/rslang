@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const ESLintWebpackPlugin = require('eslint-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -49,6 +50,11 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: './src/assets', to: './assets' }
+      ]
     }),
   ].concat(isDevMode ? [new ESLintWebpackPlugin()] : [new MiniCssExtractPlugin()]),
 };
