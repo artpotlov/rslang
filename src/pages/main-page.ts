@@ -1,5 +1,7 @@
 import { initHeaderEvent, initMainEvent } from '../controllers/main-page/main-page-controller';
 
+import './main-page.scss';
+
 import header from '../components/main-page/header.hbs';
 import main from '../components/main-page/main.hbs';
 import footer from '../components/main-page/footer.hbs';
