@@ -1,5 +1,6 @@
 import { createNewUser, signIn } from '../../utils/api';
 import { setLSData } from '../../utils/local-storage';
+import { router } from '../../utils/router-storage';
 
 const setFormView = (rootElement: HTMLElement, template: HTMLTemplateElement) => {
   const element = rootElement;
@@ -53,7 +54,7 @@ const sendLoginForm = async () => {
       setLSData('userData', result.params);
       updateBtnView(btnSubmitElement, true, 'Успешно');
       setTimeout(() => {
-        window.location.replace('');
+        router.redirectTo('');
       }, 1000);
       break;
     case 403:
