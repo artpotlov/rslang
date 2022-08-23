@@ -14,7 +14,7 @@ export const initMainPage = (element: HTMLElement): void => {
       ${main()}
       ${footer()}
     </div>`;
-  rootElement.innerHTML += wrapper;
+  rootElement.innerHTML = wrapper;
 
   const headerContainer: HTMLElement | null = document.querySelector('.header');
   if (!headerContainer) throw new Error('headerContainer is null');

@@ -1,14 +1,13 @@
 import { initAuth } from '../pages/auth-page';
 import { dictionary } from '../pages/dictionary';
+import { initMainPage } from '../pages/main-page';
 import { router } from './router-storage';
 
 export const initRouter = (element: HTMLElement) => {
-  const currentElement = element;
-
   router
     .add('', () => {
       document.title = 'Main page';
-      currentElement.innerHTML = '';
+      initMainPage(element);
     })
     .add('auth', () => {
       initAuth(element);
