@@ -18,9 +18,7 @@ export const initMainPage = (element: HTMLElement): void => {
 
   const headerContainer: HTMLElement | null = document.querySelector('.header');
   if (!headerContainer) throw new Error('headerContainer is null');
-  const mainWrap: HTMLElement | null = document.querySelector('.main');
-  if (!mainWrap) throw new Error('mainWrap is null');
 
   initHeaderEvent(headerContainer);
-  initMainEvent(mainWrap);
+  initMainEvent();
 };
