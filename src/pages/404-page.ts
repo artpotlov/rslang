@@ -1,8 +1,7 @@
 import page404Template from '../components/page-404/index.hbs';
 
-export const initPage404 = (element: HTMLElement) => {
+export const initPage404 = () => {
   document.title = 'Страница не найдена';
 
-  const rootElement = element;
-  rootElement.innerHTML = page404Template();
+  document.body.innerHTML = page404Template();
 };
