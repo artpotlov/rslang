@@ -1,0 +1,23 @@
+.disable-progress-word {
+  @apply bg-green-100;
+
+  & * {
+    visibility: hidden;
+  }
+}
+
+.active-progress-word {
+  @apply bg-green-500;
+
+  & * {
+    visibility: visible;
+  }
+}
+
+.disable-progress-level {
+  @apply grayscale opacity-20;
+}
+
+.active-progress-level {
+  @apply grayscale-0 opacity-100;
+}

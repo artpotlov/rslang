@@ -1,0 +1,38 @@
+<div data-role="sprint-game__btn-close"
+  class="w-10 h-10 absolute top-12 right-8 text-gray-400 transition-colors hover:text-gray-300 active:text-gray-500">
+  <i class="w-full h-full fa-solid fa-close"></i>
+</div>
+
+<div class="p-10 border bg-white min-w-[320px] max-w-lg max-h-[512px] overflow-y-auto">
+  <h1 class="text-3xl text-center mb-4">Результаты</h1>
+
+  {{#if successWords}}
+  <h2 class="text-green-500 mb-2">Правильные ответы</h2>
+  {{#each successWords}}
+  <div class="w-full flex justify-between items-center mb-1">
+    <p>{{word}} - {{translateWord}}</p>
+    <button data-id="{{id}}" class="text-gray-500 transition-all hover:text-gray-400 active:text-gray-600">
+      <i class="fa-solid fa-headphones-simple"></i>
+    </button>
+  </div>
+  {{/each}}
+  {{/if}}
+
+  {{#if wrongWords}}
+  <h2 class="text-red-500 my-2">Неправильные ответы</h2>
+  {{#each wrongWords}}
+  <div class="w-full flex justify-between items-center mb-1">
+    <p>{{word}} - {{translateWord}}</p>
+    <button data-id="{{id}}" class="text-gray-500 transition-all hover:text-gray-400 active:text-gray-600">
+      <i class="fa-solid fa-headphones-simple"></i>
+    </button>
+  </div>
+  {{/each}}
+  {{/if}}
+
+  {{#unless successWords}}
+  {{#unless wrongWords}}
+  <p class="my-2 text-center text-red-500">Ответов нет</p>
+  {{/unless}}
+  {{/unless}}
+</div>
