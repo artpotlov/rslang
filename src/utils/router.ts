@@ -1,17 +1,9 @@
-import Router from 'vanilla-router';
 import { initAuth } from '../pages/auth-page';
-import { initPage404 } from '../pages/404-page';
 import { dictionary } from '../pages/dictionary';
+import { router } from './router-storage';
 
 export const initRouter = (element: HTMLElement) => {
   const currentElement = element;
-
-  const router = new Router({
-    mode: 'hash',
-    page404: () => {
-      initPage404(element);
-    },
-  });
 
   router
     .add('', () => {
