@@ -7,6 +7,7 @@ import main from '../components/main-page/main.hbs';
 import footer from '../components/main-page/footer.hbs';
 
 export const initMainPage = (element: HTMLElement): void => {
+  document.title = 'Главная страница';
   const rootElement: HTMLElement = element;
   const wrapper = `
     <div class="min-h-full flex flex-col">

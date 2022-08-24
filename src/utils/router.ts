@@ -6,7 +6,6 @@ import { router } from './router-storage';
 export const initRouter = (element: HTMLElement) => {
   router
     .add('', () => {
-      document.title = 'Main page';
       initMainPage(element);
     })
     .add('auth', () => {
