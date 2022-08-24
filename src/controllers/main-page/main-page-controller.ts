@@ -1,4 +1,4 @@
-import { urlChanger } from '../urlChanger';
+import { router } from '../../utils/router-storage';
 
 const clickHeaderEvent = (target: EventTarget, element: HTMLElement) => {
   if (!(target instanceof HTMLElement)) {
@@ -14,7 +14,7 @@ const clickHeaderEvent = (target: EventTarget, element: HTMLElement) => {
       break;
     case 'header__btn-auth':
       if (element.classList.contains('open')) element.classList.remove('open');
-      urlChanger('#auth');
+      router.navigateTo('#auth');
       break;
     default:
       break;
