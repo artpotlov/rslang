@@ -54,7 +54,7 @@ const sendLoginForm = async () => {
       setLSData('userData', result.params);
       updateBtnView(btnSubmitElement, true, 'Успешно');
       setTimeout(() => {
-        router.redirectTo('');
+        router.navigateTo('');
       }, 1000);
       break;
     case 403:
