@@ -1,0 +1,25 @@
+<main class="w-full h-full fixed top-0 left-0 {{!-- удалить то что слева при добавлении шапки??? и добавить fkex 1 1 auto??? --}} flex justify-center items-center">
+  <div class="place-self-center flex flex-col gap-4">
+    <h2 class="w-fit self-center">Аудиовызов</h2>
+    <span>"Аудиовызов" - это игра, которая помогает пракачать восприятие речи на слух</span>
+    <ul class="list-disc list-inside">
+      <li>Для выбора ответа используйте мышь или клавиши 1 - 5</li>
+      <li>Для повторного воспроизведения слова используйте пробел</li>
+      <li>Для получения подсказки или перехода к следующему слову используйте Enter</li>
+    </ul>
+    <div class="flex gap-4 self-center">
+      <fieldset class="border-2 border-slate-400 border-solid rounded-md px-4 self-end">
+        <legend>Сложность</legend>
+        <select name="game-difficulty" class="border-none">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </fieldset>
+      <button class="border-2 border-slate-400 border-solid rounded-md p-3.5 self-end">СТАРТ</button>
+    </div>
+  </div>
+</main>
