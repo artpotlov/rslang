@@ -1,41 +1,41 @@
 {{#each dataDictionary}}
-<div class='w-[400px] flex flex-col rounded-3xl bg-gradient-to-t to-blue-300 from-white cursor-point relative'
+<div
+  class='w-[400px] flex flex-col rounded-3xl shadow-[-10px_-15px_30px_-20px_rgba(0,0,0,.3)] bg-gradient-to-t {{#if difficulty}}{{../DINAMIC_CLASSES/cardWordDifficult}}{{else}}{{#if optional/lerned}}{{../DINAMIC_CLASSES/cardWordLerned}}{{else}}{{../DINAMIC_CLASSES/cardWordDefault}}{{/if}}{{/if}} from-white relative'
   data-role='dictionary__card' data-id='{{id}}'>
   <div class='w-full flex'>
     <img class='w-48 h-32 rounded-tl-3xl rounded-br-3xl' src="{{../API_URL}}/{{image}}" alt='image' />
-    <div class='flex flex-col justify-center items-center grow text-xl'>
-      <div class='pb-3 text-center'>
+    <div class='flex flex-col items-center grow text-xl'>
+      <div class='pt-[10px] text-center'>
         <h3 class='text-3xl'>
           {{word}}
         </h3>
-        <span>
-          {{transcription}}
-        </span>
+        <span>{{transcription}}</span>
       </div>
-      <span>
-        {{wordTranslate}}
-      </span>
+      <span>{{wordTranslate}}</span>
+      {{#if ../idUser}}
+      <div class='flex gap-5'>
+        {{#if optional/lerned}}
+        {{else}}
+        <i class='bi bi-puzzle text-2xl {{#if difficulty}}{{../DINAMIC_CLASSES/iconWordDifficult}}{{^}}cursor-pointer{{/if}}'
+          data-role='dictionary__difficult' title='Сложное'></i>
+        {{/if}}
+        <i class='bi bi-mortarboard text-2xl {{#if optional/lerned}}{{../DINAMIC_CLASSES/iconWordLerned}}{{^}}cursor-pointer{{/if}}'
+          data-role='dictionary__studied' title='Изучено'></i>
+      </div>
+      {{/if}}
     </div>
-    <span class='pt-[17px]'>
-      <i class="bi bi-volume-up-fill text-2xl pr-2 cursor-pointer" data-role='dictionary__sound'></i>
+    <span class='pt-[15px] cursor-pointer'>
+      <i class="bi bi-volume-up-fill text-2xl pr-2" data-role='dictionary__sound'></i>
     </span>
   </div>
-  <div class='px-2 py-4 flex flex-col'>
+  <div class='px-2 pb-4 flex flex-col'>
     <div class='py-2 flex flex-col'>
-      <span>
-        {{{textMeaning}}}
-      </span>
-      <span>
-        {{textMeaningTranslate}}
-      </span>
+      <span>{{{textMeaning}}}</span>
+      <span>{{textMeaningTranslate}}</span>
     </div>
     <div class='py-2 flex flex-col'>
-      <span>
-        {{{ textExample}}}
-      </span>
-      <span>
-        {{textExampleTranslate}}
-      </span>
+      <span>{{{ textExample}}}</span>
+      <span>{{textExampleTranslate}}</span>
     </div>
   </div>
 </div>

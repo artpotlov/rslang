@@ -1,10 +1,8 @@
 export const getLSData = <T>(key: string) => {
   const data = localStorage.getItem(key);
-
   if (!data) {
     return null;
   }
-
   return <T>JSON.parse(data);
 };
 

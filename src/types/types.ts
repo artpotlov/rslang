@@ -1,9 +1,4 @@
-export enum RequestMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-}
+import { RequestMethod, StatusDifficulty } from '../const';
 
 export interface IUserToken {
   token: string;
@@ -57,6 +52,11 @@ export interface IObjectString extends Record<string, string> {
   page: string;
 }
 
+export type TUserWord = {
+  difficulty?: StatusDifficulty;
+  optional?: Record<string, unknown>;
+};
+
 export type TDataDictionary = {
   id: string;
   group: number;
@@ -72,11 +72,25 @@ export type TDataDictionary = {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
-};
+} & TUserWord;
 
 export type TDataDictionaryResponse = {
   status: number;
   params: TDataDictionary[];
+};
+
+export type TUserData = {
+  message: string;
+  token: string;
+  refreshToken: string;
+  userId: string;
+  name: string;
+};
+
+export type TRequestParams<TBody> = {
+  method: RequestMethod;
+  sendParams?: TBody;
+  customHeaders?: HeadersInit;
 };
 
 export type TSprintGameMode = 'common' | 'book';
