@@ -1,6 +1,7 @@
 import dictionaryTemplate from '../components/dictionary/index.hbs';
 import headerTemplate from '../components/header/header.hbs';
 import footerTemplate from '../components/footer/footer.hbs';
+import groupButtonsTemplate from '../components/dictionary/groupButtons.hbs';
 import { initDictionaryController } from '../controllers/dictionary/dictionary-controller';
 import { MAX_PAGE_DICTIONARY, TITLES_PAGE } from '../const';
 import setPagination from '../controllers/pagination/setPagination';
@@ -16,5 +17,6 @@ export const dictionary = (element: HTMLElement, paramsDictionary = { group: '0'
   const dictionaryElement = document.querySelector('[data-role="dictionary"]');
   if (!(dictionaryElement instanceof HTMLElement)) return;
   const { page, group } = paramsDictionary;
+  dictionaryElement.insertAdjacentHTML('afterbegin', groupButtonsTemplate());
   setPagination(dictionaryElement, MAX_PAGE_DICTIONARY, +page, +group);
 };
