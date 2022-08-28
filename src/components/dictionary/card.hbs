@@ -1,6 +1,6 @@
 {{#each dataDictionary}}
 <div
-  class='w-[400px] flex flex-col rounded-3xl shadow-[-10px_-15px_30px_-20px_rgba(0,0,0,.3)] bg-gradient-to-t {{#if difficulty}}{{../DINAMIC_CLASSES/cardWordDifficult}}{{else}}{{#if optional/lerned}}{{../DINAMIC_CLASSES/cardWordLerned}}{{else}}{{../DINAMIC_CLASSES/cardWordDefault}}{{/if}}{{/if}} from-white relative'
+  class='w-[600px] flex flex-col rounded-3xl shadow-[-10px_-15px_30px_-20px_rgba(0,0,0,.3)] bg-gradient-to-t {{#if difficulty}}{{../DINAMIC_CLASSES/cardWordDifficult}}{{else}}{{#if optional/lerned}}{{../DINAMIC_CLASSES/cardWordLerned}}{{else}}{{../DINAMIC_CLASSES/cardWordDefault}}{{/if}}{{/if}} from-white relative'
   data-role='dictionary__card' data-id='{{id}}'>
   <div class='w-full flex'>
     <img class='w-48 h-32 rounded-tl-3xl rounded-br-3xl' src="{{../API_URL}}/{{image}}" alt='image' />
