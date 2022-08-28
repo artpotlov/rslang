@@ -1,13 +1,13 @@
 import { IObjectString, TDataDictionary, TUserData, TUserWord } from '../../types/types';
 import { createUserWord, getChunkWords, getUserWord, updateUserWord } from '../../utils/api';
 import templateCard from '../../components/dictionary/card.hbs';
-import paginationTemplate from '../../components/pagination/pagination.hbs';
-import { API_URL, DINAMIC_CLASSES, KEYS_LS, StatusDifficulty } from '../../const';
+import { API_URL, DINAMIC_CLASSES, KEYS_LS, MAX_PAGE_DICTIONARY, StatusDifficulty } from '../../const';
 import stopSound from '../../helpers/stopSount';
 import playSound from '../../helpers/playSound';
 import { deleteLSData, getLSData } from '../../utils/local-storage';
 import isAuth from '../../utils/checkAuth';
 import logout from '../../utils/logout';
+import initPagination from '../pagination/pagination';
 
 class DictionaryController {
   dictionaryElement;
@@ -46,7 +46,12 @@ class DictionaryController {
       dataDictionary: this.dataDictionary,
       DINAMIC_CLASSES,
     });
-    this.dictionaryElement.insertAdjacentHTML('beforeend', paginationTemplate());
+    const paginationElement = initPagination(
+      MAX_PAGE_DICTIONARY,
+      +this.paramsDictionary.page,
+      +this.paramsDictionary.group,
+    );
+    this.dictionaryElement.insertAdjacentHTML('beforeend', paginationElement);
   };
 
   initEvent = () => {

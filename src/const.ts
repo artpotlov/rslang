@@ -28,3 +28,5 @@ export const DINAMIC_CLASSES = {
   cardWordLerned: 'to-[rgb(16,185,129,.2)]',
   cardWordDifficult: 'to-[rgb(185,16,129,.2)]',
 };
+
+export const MAX_PAGE_DICTIONARY = 30;
