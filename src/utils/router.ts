@@ -1,15 +1,15 @@
 import { initAuth } from '../pages/auth-page';
 import { dictionary } from '../pages/dictionary';
+import { initMainPage, initAboutTeam } from '../pages/main-page';
 import { router } from './router-storage';
 
 export const initRouter = (element: HTMLElement) => {
-  const currentElement = element;
-
   router
     .add('', () => {
-      document.title = 'Main page';
-      currentElement.innerHTML = '';
-      currentElement.innerHTML = `<div>Main Page</div>`;
+      initMainPage(element);
+    })
+    .add('about-team', () => {
+      initAboutTeam(element);
     })
     .add('auth', () => {
       initAuth(element);
