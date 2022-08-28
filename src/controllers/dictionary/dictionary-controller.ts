@@ -1,14 +1,16 @@
 import { IObjectString, TDataDictionary, TUserData, TUserWord } from '../../types/types';
 import { createUserWord, getChunkWords, getUserWord, updateUserWord } from '../../utils/api';
 import templateCard from '../../components/dictionary/card.hbs';
+import paginationTemplate from '../../components/pagination/pagination.hbs';
 import { API_URL, DINAMIC_CLASSES, KEYS_LS, StatusDifficulty } from '../../const';
 import stopSound from '../../helpers/stopSount';
 import playSound from '../../helpers/playSound';
-import { getLSData } from '../../utils/local-storage';
+import { deleteLSData, getLSData } from '../../utils/local-storage';
 import isAuth from '../../utils/checkAuth';
 import logout from '../../utils/logout';
 
 class DictionaryController {
+  dictionaryElement;
   dictionaryContentElement;
   dataDictionary;
   soundData: HTMLAudioElement[] | [];
@@ -16,11 +18,13 @@ class DictionaryController {
   paramsDictionary;
 
   constructor(
+    dictionaryElement: HTMLElement,
     dictionaryContentElement: HTMLElement,
     dataDictionary: TDataDictionary[],
     paramsDictionary: IObjectString,
     userData: TUserData | null,
   ) {
+    this.dictionaryElement = dictionaryElement;
     this.dictionaryContentElement = dictionaryContentElement;
     this.dataDictionary = dataDictionary;
     this.soundData = [];
@@ -42,6 +46,7 @@ class DictionaryController {
       dataDictionary: this.dataDictionary,
       DINAMIC_CLASSES,
     });
+    this.dictionaryElement.insertAdjacentHTML('beforeend', paginationTemplate());
   };
 
   initEvent = () => {
@@ -143,11 +148,15 @@ const setAdditionalDataWords = async (
   userData: TUserData,
   words: TDataDictionary[],
 ): Promise<TDataDictionary[] & TUserWord[]> => {
-  const wordsUserPromise = words.map((word) => getUserWord(userData, word.id));
   try {
+    const wordsUserPromise = words.map((word) => getUserWord(userData, word.id));
     const wordsUser = await Promise.all(wordsUserPromise);
-    return wordsUser.map(({ params }, index) => {
-      if (!params) return words[index];
+
+    return wordsUser.map(({ params, status }, index) => {
+      if (!params) {
+        !isAuth(status) && deleteLSData(KEYS_LS.userData);
+        return words[index];
+      }
       const difficultyWord = params.difficulty === StatusDifficulty.HARD ? params.difficulty : null;
       const optionalWord = params.optional || null;
       return { ...words[index], difficulty: difficultyWord, optional: optionalWord };
@@ -158,17 +167,21 @@ const setAdditionalDataWords = async (
 };
 
 export const initDictionaryController = async (paramsDictionary: IObjectString) => {
-  const dictionaryContentElement = document.querySelector<HTMLElement>(
+  const dictionaryElement = document.querySelector('[data-role="dictionary"]');
+  if (!(dictionaryElement instanceof HTMLElement)) return;
+  const dictionaryContentElement = dictionaryElement.querySelector(
     '[data-role="dictionary__content"]',
   );
-  if (!dictionaryContentElement) return;
+  if (!(dictionaryContentElement instanceof HTMLElement)) return;
   let { params } = await getChunkWords(paramsDictionary);
   if (!params) return;
-  const userData: TUserData | null = getLSData(KEYS_LS.userData);
+  let userData: TUserData | null = getLSData(KEYS_LS.userData);
   if (userData) {
     params = await setAdditionalDataWords(userData, params);
   }
+  userData = getLSData(KEYS_LS.userData);
   const dictionaryController = new DictionaryController(
+    dictionaryElement,
     dictionaryContentElement,
     params,
     paramsDictionary,
