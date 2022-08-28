@@ -1,16 +1,19 @@
 import { IObjectString, TDataDictionary, TUserData, TUserWord } from '../../types/types';
 import { createUserWord, getChunkWords, getUserWord, updateUserWord } from '../../utils/api';
 import templateCard from '../../components/dictionary/card.hbs';
-import { API_URL, DINAMIC_CLASSES, KEYS_LS, MAX_PAGE_DICTIONARY, StatusDifficulty } from '../../const';
+import {
+  API_URL,
+  DINAMIC_CLASSES,
+  KEYS_LS,
+  StatusDifficulty,
+} from '../../const';
 import stopSound from '../../helpers/stopSount';
 import playSound from '../../helpers/playSound';
 import { deleteLSData, getLSData } from '../../utils/local-storage';
 import isAuth from '../../utils/checkAuth';
 import logout from '../../utils/logout';
-import initPagination from '../pagination/pagination';
 
 class DictionaryController {
-  dictionaryElement;
   dictionaryContentElement;
   dataDictionary;
   soundData: HTMLAudioElement[] | [];
@@ -18,13 +21,11 @@ class DictionaryController {
   paramsDictionary;
 
   constructor(
-    dictionaryElement: HTMLElement,
     dictionaryContentElement: HTMLElement,
     dataDictionary: TDataDictionary[],
     paramsDictionary: IObjectString,
     userData: TUserData | null,
   ) {
-    this.dictionaryElement = dictionaryElement;
     this.dictionaryContentElement = dictionaryContentElement;
     this.dataDictionary = dataDictionary;
     this.soundData = [];
@@ -46,12 +47,6 @@ class DictionaryController {
       dataDictionary: this.dataDictionary,
       DINAMIC_CLASSES,
     });
-    const paginationElement = initPagination(
-      MAX_PAGE_DICTIONARY,
-      +this.paramsDictionary.page,
-      +this.paramsDictionary.group,
-    );
-    this.dictionaryElement.insertAdjacentHTML('beforeend', paginationElement);
   };
 
   initEvent = () => {
@@ -172,9 +167,7 @@ const setAdditionalDataWords = async (
 };
 
 export const initDictionaryController = async (paramsDictionary: IObjectString) => {
-  const dictionaryElement = document.querySelector('[data-role="dictionary"]');
-  if (!(dictionaryElement instanceof HTMLElement)) return;
-  const dictionaryContentElement = dictionaryElement.querySelector(
+  const dictionaryContentElement = document.querySelector(
     '[data-role="dictionary__content"]',
   );
   if (!(dictionaryContentElement instanceof HTMLElement)) return;
@@ -186,7 +179,6 @@ export const initDictionaryController = async (paramsDictionary: IObjectString) 
   }
   userData = getLSData(KEYS_LS.userData);
   const dictionaryController = new DictionaryController(
-    dictionaryElement,
     dictionaryContentElement,
     params,
     paramsDictionary,
