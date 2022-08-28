@@ -1,4 +1,4 @@
-<div class="place-self-center flex flex-col gap-4 hidden">
+<div class="game place-self-center flex flex-col gap-4">
   <div class="self-center flex flex-col">
     <div class="w-32 h-32 rounded-full border-black border self-center"></div>
     <div class="self-center">
@@ -12,13 +12,13 @@
     <i class="fa-solid fa-volume-high fa-3x"></i>
   </button>
   <ul class="list-decimal list-inside flex gap-4">
-    <li class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word1}}</li>
-    <li class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word2}}</li>
-    <li class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word3}}</li>
-    <li class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word4}}</li>
-    <li class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word5}}</li>
+    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word1}}</li>
+    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word2}}</li>
+    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word3}}</li>
+    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word4}}</li>
+    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word5}}</li>
   </ul>
-  <button class="border-2 border-slate-400 border-solid rounded-md p-3.5 self-center hover:bg-blue-700">Не знаю</button>
+  <button data-game="dont-know" class="border-2 border-slate-400 border-solid rounded-md p-3.5 self-center hover:bg-blue-700">Не знаю</button>
 </div>
 
 <div class="hidden">
