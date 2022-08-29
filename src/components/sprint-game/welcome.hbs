@@ -1,0 +1,25 @@
+<div class="p-14 flex flex-col items-center bg-white border gap-4">
+  <h1 class="text-4xl text-blue-500 font-semibold">Игра спринт</h1>
+  <p>Игра Спринт учит быстро переводить слова на родной язык</p>
+  <p>Управление в игре осуществляется с помощью мыши или клавиш влево или право</p>
+
+  <div class="flex flex-col gap-2">
+    <p class="text-blue-500">Выберите уровень сложности</p>
+    <select data-role="sprint-game__level">
+      <option value="0" selected>Уровень 1</option>
+      <option value="1">Уровень 2</option>
+      <option value="2">Уровень 3</option>
+      <option value="3">Уровень 4</option>
+      <option value="4">Уровень 5</option>
+      <option value="5">Уровень 6</option>
+    </select>
+    <button data-role="sprint-game__btn-start"
+            class="px-4 py-2 bg-blue-500 text-white rounded transition-colors hover:bg-blue-400 active:bg-blue-600">
+      Играть
+    </button>
+  </div>
+  {{#unless isAuth}}
+    <p><a href="#auth" class="text-blue-500 transition-colors hover:text-blue-400">Войти или зарегистрироваться</a>,
+      чтобы сохранить результаты игры</p>
+  {{/unless}}
+</div>
