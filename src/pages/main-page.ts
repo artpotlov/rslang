@@ -1,4 +1,5 @@
-import { initHeaderEvent, initMainEvent } from '../controllers/main-page/main-page-controller';
+import { initHeaderEvent } from '../controllers/main-page/header-controller';
+import { initMainEvent } from '../controllers/main-page/main-page-controller';
 
 import './main-page.scss';
 
