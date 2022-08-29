@@ -1,7 +1,7 @@
 import './main-page.scss';
 import '../components/audio-game/audio.scss';
 import header from '../components/main-page/header.hbs';
-// import { initHeaderEvent } from '../controllers/main-page/main-page-controller';
+import { initHeaderEvent } from '../controllers/main-page/main-page-controller';
 import { initStartEvent } from '../controllers/audio-game-controller';
 
 import main from '../components/audio-game/main.hbs';
@@ -45,5 +45,5 @@ export function initAudioGame(element: HTMLElement) {
 
   initStartEvent(mainElement);
 
-  // initHeaderEvent(headerContainer);
+  initHeaderEvent(headerContainer);
 }
