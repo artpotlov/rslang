@@ -17,7 +17,7 @@ export const initMiniGames = (element: HTMLElement): void => {
     </div>`;
   rootElement.innerHTML = wrapper;
 
-  const headerContainer: HTMLElement | null = document.querySelector('.header');
+  const headerContainer = document.querySelector('.header');
   if (!headerContainer) throw new Error('headerContainer is null');
 
   initHeaderEvent(headerContainer);

@@ -1,6 +1,6 @@
 import { router } from '../../utils/router-storage';
 
-const clickHeaderEvent = (target: EventTarget, element: HTMLElement) => {
+const clickHeaderEvent = (target: EventTarget, element: Element) => {
   if (!(target instanceof HTMLElement)) {
     return;
   }
@@ -21,10 +21,10 @@ const clickHeaderEvent = (target: EventTarget, element: HTMLElement) => {
   }
 };
 
-export const initHeaderEvent = (element: HTMLElement) => {
-  element.addEventListener('click', (event: MouseEvent): void => {
-    if (event.target) {
-      clickHeaderEvent(event.target, element);
+export const initHeaderEvent = (element: Element) => {
+  element.addEventListener('click', ({ target }): void => {
+    if (target) {
+      clickHeaderEvent(target, element);
     }
   });
 };
