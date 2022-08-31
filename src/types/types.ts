@@ -53,11 +53,16 @@ export interface IObjectString extends Record<string, string> {
 }
 
 export type TUserWord = {
-  difficulty?: StatusDifficulty;
+  difficulty?: StatusDifficulty | null;
   optional?: Record<string, unknown>;
 };
 
-export type TDataDictionary = {
+export type TUserWordResponse = {
+  status: number;
+  params: TUserWord | null;
+};
+
+export type TDataDictionary = TUserWord & {
   id: string;
   group: number;
   page: number;
@@ -72,7 +77,7 @@ export type TDataDictionary = {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
-} & TUserWord;
+};
 
 export type TDataDictionaryResponse = {
   status: number;
@@ -91,6 +96,32 @@ export type TRequestParams<TBody> = {
   method: RequestMethod;
   sendParams?: TBody;
   customHeaders?: HeadersInit;
+};
+
+export type TAggregatedPaginated = TUserWord & {
+  _id: string;
+  group: number;
+  page: number;
+  word: string;
+  image: string;
+  audio: string;
+  audioMeaning: string;
+  audioExample: string;
+  textMeaning: string;
+  textExample: string;
+  transcription: string;
+  wordTranslate: string;
+  textMeaningTranslate: string;
+  textExampleTranslate: string;
+};
+
+export type TAggregatedWords = {
+  paginatedResults: TAggregatedPaginated[];
+};
+
+export type TAggregatedWordRequest = {
+  status: number;
+  params: TAggregatedWords[];
 };
 
 export type TSprintGameMode = 'common' | 'book';

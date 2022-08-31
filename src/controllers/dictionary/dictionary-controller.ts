@@ -1,17 +1,12 @@
 import { IObjectString, TDataDictionary, TUserData, TUserWord } from '../../types/types';
-import { createUserWord, getChunkWords, getUserWord, updateUserWord } from '../../utils/api';
+import { createUserWord, updateUserWord } from '../../utils/api';
 import templateCard from '../../components/dictionary/card.hbs';
-import {
-  API_URL,
-  DINAMIC_CLASSES,
-  KEYS_LS,
-  StatusDifficulty,
-} from '../../const';
+import { API_URL, DINAMIC_CLASSES, GROUP_DIFFICULT, KEYS_LS, StatusDifficulty } from '../../const';
 import stopSound from '../../helpers/stopSount';
 import playSound from '../../helpers/playSound';
-import { deleteLSData, getLSData } from '../../utils/local-storage';
-import isAuth from '../../utils/checkAuth';
-import logout from '../../utils/logout';
+import { getLSData } from '../../utils/local-storage';
+import checkRequest from '../../utils/checkRequest';
+import getPageWords from './getPageWords';
 
 class DictionaryController {
   dictionaryContentElement;
@@ -19,6 +14,7 @@ class DictionaryController {
   soundData: HTMLAudioElement[] | [];
   userData;
   paramsDictionary;
+  isDifficultGroup;
 
   constructor(
     dictionaryContentElement: HTMLElement,
@@ -31,14 +27,8 @@ class DictionaryController {
     this.soundData = [];
     this.paramsDictionary = paramsDictionary;
     this.userData = userData;
+    this.isDifficultGroup = paramsDictionary.group === GROUP_DIFFICULT;
   }
-
-  errorRequest = (status: number) => {
-    if (!isAuth(status)) {
-      this.userData = null;
-      logout();
-    }
-  };
 
   setDictionaryView = () => {
     this.dictionaryContentElement.innerHTML = templateCard({
@@ -46,6 +36,7 @@ class DictionaryController {
       idUser: this.userData?.userId,
       dataDictionary: this.dataDictionary,
       DINAMIC_CLASSES,
+      isDifficultGroup: this.isDifficultGroup,
     });
   };
 
@@ -93,96 +84,81 @@ class DictionaryController {
   };
 
   clickDifficult = async (wordData: TDataDictionary, icon: HTMLElement, card: HTMLElement) => {
-    if (icon.classList.contains(DINAMIC_CLASSES.iconWordDifficult)) return;
-    const setDifficultCard = () => {
-      wordData.difficulty = StatusDifficulty.HARD;
-      icon.classList.add(DINAMIC_CLASSES.iconWordDifficult);
-      card.classList.remove(DINAMIC_CLASSES.cardWordDefault);
-      card.classList.add(DINAMIC_CLASSES.cardWordDifficult);
+    const isDifficultWord = icon.classList.contains(DINAMIC_CLASSES.iconWordDifficult);
+    if (!this.isDifficultGroup && isDifficultWord) return;
+    const setDifficultyCard = () => {
+      if (this.isDifficultGroup) {
+        card.classList.add(DINAMIC_CLASSES.invisible);
+      } else {
+        wordData.difficulty = StatusDifficulty.HARD;
+        icon.classList.toggle(DINAMIC_CLASSES.iconWordDifficult);
+        card.classList.toggle(DINAMIC_CLASSES.cardWordDefault);
+        card.classList.toggle(DINAMIC_CLASSES.cardWordDifficult);
+      }
     };
     const { optional } = wordData;
-    const sendParams: TUserWord = { difficulty: StatusDifficulty.HARD };
+    const sendParams: TUserWord = {
+      difficulty: this.isDifficultGroup ? StatusDifficulty.EASY : StatusDifficulty.HARD,
+    };
     if (optional) {
       sendParams.optional = optional;
     }
-    this.changeWord(wordData, sendParams, setDifficultCard);
+    this.changeWord(wordData, sendParams, setDifficultyCard);
   };
 
   clickLearned = async (wordData: TDataDictionary, icon: HTMLElement, card: HTMLElement) => {
     if (icon.classList.contains(DINAMIC_CLASSES.iconWordLerned)) return;
     const sendParams: TUserWord = { difficulty: StatusDifficulty.EASY, optional: { lerned: true } };
     const setLernedCard = () => {
-      icon.classList.add(DINAMIC_CLASSES.iconWordLerned);
-      card
-        .querySelector('[data-role="dictionary__difficult"]')
-        ?.classList.add(DINAMIC_CLASSES.invisible);
-      card.classList.remove(DINAMIC_CLASSES.cardWordDifficult, DINAMIC_CLASSES.cardWordDefault);
-      card.classList.add(DINAMIC_CLASSES.cardWordLerned);
+      if (this.isDifficultGroup) {
+        card.classList.add(DINAMIC_CLASSES.invisible);
+      } else {
+        icon.classList.add(DINAMIC_CLASSES.iconWordLerned);
+        card
+          .querySelector('[data-role="dictionary__difficult"]')
+          ?.classList.add(DINAMIC_CLASSES.invisible);
+        card.classList.remove(DINAMIC_CLASSES.cardWordDifficult, DINAMIC_CLASSES.cardWordDefault);
+        card.classList.add(DINAMIC_CLASSES.cardWordLerned);
+      }
     };
     const { optional } = wordData;
     if (optional) {
       sendParams.optional = { ...optional, ...sendParams.optional };
     }
-    this.changeWord(wordData, sendParams, setLernedCard);
+    await this.changeWord(wordData, sendParams, setLernedCard);
+    if (this.isDifficultGroup) card.classList.add(DINAMIC_CLASSES.invisible);
   };
 
   changeWord = async (wordData: TDataDictionary, sendParams: TUserWord, callback: () => void) => {
     if (!this.userData) return;
     const { difficulty, optional } = wordData;
     if (difficulty || optional) {
-      const { status, params } = await updateUserWord(this.userData, wordData.id, sendParams);
-      params ? callback() : this.errorRequest(status);
+      const { status } = await updateUserWord(this.userData, wordData.id, sendParams);
+      checkRequest(status);
+      callback();
     } else {
-      const { status, params } = await createUserWord(this.userData, wordData.id, sendParams);
-      params ? callback() : this.errorRequest(status);
+      const { status } = await createUserWord(this.userData, wordData.id, sendParams);
+      checkRequest(status);
+      callback();
     }
   };
 
-  updateDictionary = () => {
+  setDictionary = () => {
     this.setDictionaryView();
     this.initEvent();
   };
 }
 
-const setAdditionalDataWords = async (
-  userData: TUserData,
-  words: TDataDictionary[],
-): Promise<TDataDictionary[] & TUserWord[]> => {
-  try {
-    const wordsUserPromise = words.map((word) => getUserWord(userData, word.id));
-    const wordsUser = await Promise.all(wordsUserPromise);
-
-    return wordsUser.map(({ params, status }, index) => {
-      if (!params) {
-        !isAuth(status) && deleteLSData(KEYS_LS.userData);
-        return words[index];
-      }
-      const difficultyWord = params.difficulty === StatusDifficulty.HARD ? params.difficulty : null;
-      const optionalWord = params.optional || null;
-      return { ...words[index], difficulty: difficultyWord, optional: optionalWord };
-    });
-  } catch {
-    return words;
-  }
-};
-
 export const initDictionaryController = async (paramsDictionary: IObjectString) => {
-  const dictionaryContentElement = document.querySelector(
-    '[data-role="dictionary__content"]',
-  );
+  const dictionaryContentElement = document.querySelector('[data-role="dictionary__content"]');
   if (!(dictionaryContentElement instanceof HTMLElement)) return;
-  let { params } = await getChunkWords(paramsDictionary);
-  if (!params) return;
-  let userData: TUserData | null = getLSData(KEYS_LS.userData);
-  if (userData) {
-    params = await setAdditionalDataWords(userData, params);
-  }
-  userData = getLSData(KEYS_LS.userData);
+  const pageWords = await getPageWords(paramsDictionary);
+  const userData: TUserData | null = getLSData(KEYS_LS.userData);
   const dictionaryController = new DictionaryController(
     dictionaryContentElement,
-    params,
+    pageWords,
     paramsDictionary,
     userData,
   );
-  dictionaryController.updateDictionary();
+  dictionaryController.setDictionary();
 };

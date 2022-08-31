@@ -30,3 +30,5 @@ export const DINAMIC_CLASSES = {
 };
 
 export const MAX_PAGE_DICTIONARY = 30;
+
+export const GROUP_DIFFICULT = '6';

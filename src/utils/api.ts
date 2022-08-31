@@ -6,6 +6,7 @@ import {
   IGetUserDataResponse,
   IObjectString,
   ISignInResponse,
+  TAggregatedWordRequest,
   IStatisticInput,
   IStatisticResponse,
   IUserAggregateWordsInput,
@@ -18,6 +19,7 @@ import {
   TRequestParams,
   TUserData,
   TUserWord,
+  TUserWordResponse,
 } from '../types/types';
 
 const getRequestParams = <TBody extends object>({
@@ -78,7 +80,7 @@ export const createUserWord = async (
   userData: TUserData,
   idWord: string,
   sendParams: TUserWord,
-) => {
+): Promise<TUserWordResponse> => {
   const { userId, token } = userData;
   const url = `${API_URL}/users/${userId}/words/${idWord}`;
   const customHeaders = { Authorization: `Bearer ${token}` };
@@ -91,7 +93,7 @@ export const createUserWord = async (
   };
 };
 
-export const getUserWord = async (userData: TUserData, idWord: string) => {
+export const getUserWord = async (userData: TUserData, idWord: string): Promise<TUserWordResponse> => {
   const { userId, token } = userData;
   const url = `${API_URL}/users/${userId}/words/${idWord}`;
   const customHeaders = { Authorization: `Bearer ${token}` };
@@ -108,7 +110,7 @@ export const updateUserWord = async (
   userData: TUserData,
   idWord: string,
   sendParams: TUserWord,
-) => {
+): Promise<TUserWordResponse> => {
   const { userId, token } = userData;
   const url = `${API_URL}/users/${userId}/words/${idWord}`;
   const customHeaders = { Authorization: `Bearer ${token}` };
@@ -121,11 +123,15 @@ export const updateUserWord = async (
   };
 };
 
-export const deleteUserWord = async (userData: TUserData, idWord: string) => {
+export const getAggregatedWords = async (
+  userData: TUserData,
+  sendParams: Record<string, string>,
+): Promise<TAggregatedWordRequest> => {
   const { userId, token } = userData;
-  const url = `${API_URL}/users/${userId}/words/${idWord}`;
+  const queryString = new URLSearchParams(sendParams).toString();
+  const url = `${API_URL}/users/${userId}/aggregatedWords?${queryString}`;
   const customHeaders = { Authorization: `Bearer ${token}` };
-  const method = RequestMethod.DELETE;
+  const method = RequestMethod.GET;
   const params = getRequestParams({ method, customHeaders });
   const response = await fetch(url, params);
   return {

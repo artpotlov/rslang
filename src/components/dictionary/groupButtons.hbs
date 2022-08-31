@@ -1,27 +1,37 @@
 <section class="max-w-screen-xl mx-auto p-2">
-  <div class="bg-white px-4 py-3 flex items-center border-t border-gray-200 p-2 sm:px-6 rounded-md">
+  <div class="bg-white px-2 py-3 flex items-center border-t border-gray-200 p-2 sm:px-6 rounded-md">
     <div class="flex grow items-center justify-between">
       <div class="flex-1 grow flex items-center justify-center items-stretch justify-start">
-        <div class="flex grow justify-between text-gray-500">
+        <div class="flex grow justify-between items-center gap-3 flex-col-reverse md:flex-row text-gray-700">
           <div class="flex gap-1">
-            <span class="px-3 py-2 text-sm font-medium">Группа:</span>
-            <a href="/#dictionary/0/0" class="bg-white text-gray-500 px-3 py-2 rounded-md text-sm font-medium">1</a>
-            <a href="/#dictionary/1/0" class="bg-white text-gray-500 px-3 py-2 rounded-md text-sm font-medium">2</a>
-            <a href="/#dictionary/2/0" class="bg-white text-gray-500 px-3 py-2 rounded-md text-sm font-medium">3</a>
-            <a href="/#dictionary/3/0" class="bg-white text-gray-500 px-3 py-2 rounded-md text-sm font-medium">
-              4</a>
-            <a href="/#dictionary/4/0" class="bg-white text-gray-500 px-3 py-2 rounded-md text-sm font-medium">
-              5</a>
-            <a href="/#dictionary/5/0" class="bg-white text-gray-500 px-3 py-2 rounded-md text-sm font-medium">
-              6</a>
-            <a href="/#dictionary/6/0" class="bg-white text-gray-500 px-3 py-2 rounded-md text-sm font-medium">
-              сложные слова</a>
+            <span class="py-2 text-sm font-medium">Группа:</span>
+            <a href="/#dictionary/0/0"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(0,0,0,0.5)]">1</a>
+            <a href="/#dictionary/1/0"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(67,56,202,0.5)]">2</a>
+            <a href="/#dictionary/2/0"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(8,145,178,0.5)]">3</a>
+            <a href="/#dictionary/3/0"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(101,163,13,0.5)]">4</a>
+            <a href="/#dictionary/4/0"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(202,138,4,0.5)]">5</a>
+            <a href="/#dictionary/5/0"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(234,88,12,0.5)]">6</a>
+            {{#if userData}}
+            <a href="/#dictionary/6/0"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(255,28,28,0.5)]">сложные
+              слова</a>
+            {{/if}}
           </div>
+          {{#if userData}}
           <div class="flex gap-1">
-            <span class="px-3 py-2 text-sm font-medium">Игры:</span>
-            <a href="#" class="bg-white text-gray-500 px-3 py-2 rounded-md text-sm font-medium">Аудиовызов</a>
-            <a href="#" class="bg-white text-gray-500 px-3 py-2 rounded-md text-sm font-medium">Спринт</a>
+            <span class="py-2 text-sm font-medium">Игры:</span>
+            <a href="#"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(0,0,0,0.3)]">Аудиовызов</a>
+            <a href="#"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(0,0,0,0.3)]">Спринт</a>
           </div>
+          {{/if}}
         </div>
       </div>
     </div>
