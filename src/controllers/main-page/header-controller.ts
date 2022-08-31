@@ -21,10 +21,13 @@ const clickHeaderEvent = (target: EventTarget, element: Element) => {
   }
 };
 
-export const initHeaderEvent = (element: Element) => {
-  element.addEventListener('click', ({ target }): void => {
+export const initHeaderEvent = () => {
+  const headerContainer = document.querySelector('.header');
+  if (!headerContainer) throw new Error('headerContainer is null');
+
+  headerContainer.addEventListener('click', ({ target }): void => {
     if (target) {
-      clickHeaderEvent(target, element);
+      clickHeaderEvent(target, headerContainer);
     }
   });
 };
