@@ -30,19 +30,4 @@ export async function initAudioGame(element: HTMLElement, gameParams?: IObjectSt
 
   initStartEvent(mainElement);
   initHeaderEvent();
-
-  /*   const context = {
-    word: 'word',
-    word1: 'word1',
-    word2: 'word2',
-    word3: 'word3',
-    word4: 'word4',
-    word5: 'word5',
-  }; */
-
-  /*   const gameContainer: HTMLElement | null = document.querySelector('.game');
-  if (!gameContainer) throw new Error('gameContainer is null'); */
-
-  /* const gameAboutContainer: HTMLElement | null = document.querySelector('.game__about');
-  if (!gameAboutContainer) throw new Error('gameAboutContainer is null'); */
 }

@@ -2,7 +2,7 @@ import game from '../components/audio-game/game.hbs';
 import { getChunkWords } from '../utils/api';
 import { getRandomNumber } from '../utils/random-number';
 import { shuffle } from '../utils/shuffle';
-import { IObjectString, TDataDictionaryResponse, TDataDictionary } from '../types/types';
+import { IObjectString, TDataDictionary } from '../types/types';
 
 export function getGameDifficulty() {
   const selectDifficulty: HTMLSelectElement | null = document.querySelector(
@@ -46,16 +46,10 @@ export async function createGameWords(sendParams?: IObjectString) {
   return gameWords;
 }
 
-/* export async function nextWord(sendParams?: IObjectString) {
-  const gameWords = await createGameWords(await getWords(sendParams));
-  return gameWords;
-} */
-
 /* const gameWords = nextWord({
   group: '0',
   page: '5',
-});
-let i = 0; */
+}); */
 
 let words: {
   word: string;
