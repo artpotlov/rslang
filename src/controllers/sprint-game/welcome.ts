@@ -1,25 +1,21 @@
 /* eslint-disable no-await-in-loop */
 import loadingTemplate from '../../components/sprint-game/loading.hbs';
 import { getChunkUserWords, getChunkWords } from '../../utils/api';
-import { router } from '../../utils/router-storage';
 import { runSprintGame } from './game';
 import { sprintSettings, wordsStore } from './storage';
 import { IObjectString, IUserAggregateBase, IUserData } from '../../types/types';
 import { getLevelValue } from './view';
 import { getLSData } from '../../utils/local-storage';
+import { router } from '../../utils/router-storage';
 
 const getCurrentData = async (params: IObjectString) => {
   const group = Number(params.group);
   let page = Number(params.page);
   const userData = getLSData<IUserData>('userData');
 
-  if (!userData) return;
+  if (!userData) return false;
 
   const { token, userId } = userData;
-
-  if (!userId || !token) {
-    router.navigateTo('auth');
-  }
 
   const tmpWordStore: IUserAggregateBase[] = [];
   let cycleRequest = true;
@@ -34,41 +30,32 @@ const getCurrentData = async (params: IObjectString) => {
       isLearnedWords: false,
     });
 
-    if (response.status !== 200 || !response.params) {
-      router.navigateTo('dictionary');
-      return;
-    }
+    if (response.status !== 200 || !response.params) return false;
 
     tmpWordStore.push(...response.params[0].paginatedResults);
 
-    if (page < 1 || tmpWordStore.length === 20) {
+    if (page <= 1 || tmpWordStore.length === 20) {
       cycleRequest = false;
     } else {
       page -= 1;
     }
   }
 
+  if (tmpWordStore.length === 0) return false;
+
   wordsStore.push(...tmpWordStore);
-
-  if (wordsStore.length === 0) {
-    router.navigateTo('dictionary');
-  }
-
   wordsStore.sort(() => Math.random() - 0.5);
+
+  return true;
 };
 
 const getCommonDataWithoutParams = async () => {
   const group = getLevelValue();
   const userData = getLSData<IUserData>('userData');
 
-  if (!userData) return;
+  if (!userData) return false;
 
   const { token, userId } = userData;
-
-  if (!userId || !token) {
-    router.navigateTo('auth');
-    return;
-  }
 
   const response = await getChunkUserWords({
     group,
@@ -78,19 +65,16 @@ const getCommonDataWithoutParams = async () => {
     isLearnedWords: true,
   });
 
-  if (response.status !== 200 || !response.params) {
-    router.navigateTo('mini-games');
-    return;
-  }
+  if (response.status !== 200 || !response.params) return false;
 
   wordsStore.push(...response.params[0].paginatedResults);
 
-  if (wordsStore.length === 0) {
-    router.navigateTo('mini-games');
-  }
+  if (wordsStore.length === 0) return false;
 
   wordsStore.sort(() => Math.random() - 0.5);
   wordsStore.splice(100);
+
+  return true;
 };
 
 const getCommonData = async () => {
@@ -101,7 +85,7 @@ const getCommonData = async () => {
   });
   const response = await Promise.all(arrayPromises);
 
-  if (response.length === 0) router.navigateTo('mini-games');
+  if (response.length === 0) return false;
 
   wordsStore.push(
     ...response
@@ -110,11 +94,11 @@ const getCommonData = async () => {
       .flat(),
   );
 
-  if (wordsStore.length === 0) {
-    router.navigateTo('mini-games');
-  }
+  if (wordsStore.length === 0) return false;
 
   wordsStore.sort(() => Math.random() - 0.5);
+
+  return true;
 };
 
 export const loadGame = async (element: HTMLElement, params?: IObjectString) => {
@@ -123,23 +107,35 @@ export const loadGame = async (element: HTMLElement, params?: IObjectString) => 
   sprintGameElement.innerHTML = loadingTemplate({ processText: 'Подготавливаю игру' });
 
   if (!sprintSettings.isAuth) {
-    await getCommonData();
-    sprintSettings.blockGame = false;
+    const isRun = await getCommonData();
+    if (!isRun) {
+      router.navigateTo('mini-games');
+      return;
+    }
+    sprintSettings.isRunGame = isRun;
   }
 
   if (sprintSettings.isAuth && !params) {
-    await getCommonDataWithoutParams();
-    sprintSettings.blockGame = false;
+    const isRun = await getCommonDataWithoutParams();
+    if (!isRun) {
+      router.navigateTo('mini-games');
+      return;
+    }
+    sprintSettings.isRunGame = isRun;
   }
 
   if (sprintSettings.isAuth && params) {
-    await getCurrentData(params);
-    sprintSettings.blockGame = false;
+    const isRun = await getCurrentData(params);
+    if (!isRun) {
+      router.navigateTo('dictionary');
+      return;
+    }
+    sprintSettings.isRunGame = isRun;
   }
 
-  if (!sprintSettings.blockGame) {
+  if (sprintSettings.isRunGame) {
     runSprintGame(sprintGameElement);
   } else {
-    router.navigateTo('mini-games');
+    router.navigateTo('');
   }
 };
