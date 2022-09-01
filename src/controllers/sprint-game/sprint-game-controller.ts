@@ -1,30 +1,15 @@
 import welcomeTemplate from '../../components/sprint-game/welcome.hbs';
 import loadingTemplate from '../../components/sprint-game/loading.hbs';
 import { initSprintGameEvents } from './events';
-import { deleteLSData, getLSData } from '../../utils/local-storage';
-import { IObjectString, IUserData, TSprintGameMode } from '../../types/types';
+import { IObjectString, TSprintGameMode } from '../../types/types';
 import { resetStorage, sprintSettings } from './storage';
 import { resetGameStatistics, resetRemoteStatsStore } from '../../helpers/statistic';
 import { loadGame } from './welcome';
-import { checkUser } from '../../utils/api';
 import { router } from '../../utils/router-storage';
+import { checkUserAuth } from '../../helpers/check-auth';
 
 const checkUserLogin = async () => {
-  const userData = getLSData<IUserData>('userData');
-  if (!userData) {
-    sprintSettings.isAuth = false;
-    return;
-  }
-
-  const { userId, token } = userData;
-
-  if (!userId && !token) {
-    sprintSettings.isAuth = false;
-    return;
-  }
-
-  sprintSettings.isAuth = await checkUser({ userId: userData.userId, token: userData.token });
-  if (!sprintSettings.isAuth) deleteLSData('userData');
+  sprintSettings.isAuth = await checkUserAuth();
 };
 
 export const initSprintGameController = async (mode: TSprintGameMode, params?: IObjectString) => {
