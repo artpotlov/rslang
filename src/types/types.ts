@@ -5,10 +5,18 @@ export enum RequestMethod {
   DELETE = 'DELETE',
 }
 
-export interface IUserData {
-  message: string;
+export interface IUserToken {
   token: string;
   refreshToken: string;
+}
+
+export interface IUserTokenResponse {
+  status: number;
+  params: IUserToken | null;
+}
+
+export interface IUserData extends IUserToken {
+  message: string;
   userId: string;
   name: string;
 }
@@ -78,10 +86,15 @@ export interface IUserInput {
   token: string;
 }
 
-export interface IGetUserDataResponse {
+export interface IGetUserData {
   id: string;
   name: string;
   email: string;
+}
+
+export interface IGetUserDataResponse {
+  status: number;
+  params: IGetUserData | null;
 }
 
 export interface IGameWordStats {
