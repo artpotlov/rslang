@@ -1,7 +1,7 @@
 {{#each dataDictionary}}
 <div class='w-[600px] flex flex-col rounded-3xl shadow-[-10px_-15px_30px_-20px_rgba(0,0,0,.3)] bg-gradient-to-t from-white relative
-        {{#if optional/lerned}}{{../DINAMIC_CLASSES/cardWordLerned}}{{else}}{{../DINAMIC_CLASSES/cardWordDefault}}{{/if}}
-        {{#setDifficultClass difficulty ../DINAMIC_CLASSES/cardWordDifficult}}{{/setDifficultClass}}'
+        {{#if optional/lerned}}{{../DINAMIC_CLASSES.cardWordLerned}}{{else}}{{../DINAMIC_CLASSES.cardWordDefault}}{{/if}}
+        {{#setDifficultClass difficulty ../DINAMIC_CLASSES.cardWordDifficult}}{{/setDifficultClass}}'
   data-role='dictionary__card' data-id='{{id}}'>
   <div class='w-full flex'>
     <img class='w-48 h-32 rounded-tl-3xl rounded-br-3xl' src="{{../API_URL}}/{{image}}" alt='image' />
@@ -19,11 +19,11 @@
         {{else}}
         <i class='bi bi-puzzle text-2xl 
                  {{#if ../isDifficultGroup}}cursor-pointer{{/if}}
-                 {{#setDifficultClass difficulty ../DINAMIC_CLASSES/iconWordDifficult 'cursor-pointer'}}{{/setDifficultClass}}' 
+                 {{#setDifficultClass difficulty ../DINAMIC_CLASSES.iconWordDifficult 'cursor-pointer'}}{{/setDifficultClass}}' 
             data-role='dictionary__difficult' title='Сложное'></i>
         {{/if}}
         <i class='bi bi-mortarboard text-2xl
-                 {{#if optional/lerned}}{{../DINAMIC_CLASSES/iconWordLerned}}{{^}}cursor-pointer{{/if}}'
+                 {{#if optional/lerned}}{{../DINAMIC_CLASSES.iconWordLerned}}{{^}}cursor-pointer{{/if}}'
           data-role='dictionary__studied' title='Изучено'></i>
       </div>
       {{/if}}
