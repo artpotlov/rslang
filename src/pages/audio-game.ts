@@ -1,7 +1,7 @@
 import './main-page.scss';
 import '../components/audio-game/audio.scss';
 import header from '../components/main-page/header.hbs';
-import { initHeaderEvent } from '../controllers/main-page/main-page-controller';
+import { initHeaderEvent } from '../controllers/main-page/header-controller';
 import { initStartEvent, createGameWords } from '../controllers/audio-game-controller';
 import { IObjectString } from '../types/types';
 
@@ -19,8 +19,6 @@ export async function initAudioGame(element: HTMLElement, gameParams?: IObjectSt
     </div>
   `;
 
-  const headerContainer: HTMLElement | null = document.querySelector('.header');
-  if (!headerContainer) throw new Error('headerContainer is null');
   const mainElement: HTMLElement | null = document.querySelector('.main');
   if (!mainElement) throw new Error('mainElement is null');
 
@@ -31,7 +29,7 @@ export async function initAudioGame(element: HTMLElement, gameParams?: IObjectSt
   }
 
   initStartEvent(mainElement);
-  initHeaderEvent(headerContainer);
+  initHeaderEvent();
 
   /*   const context = {
     word: 'word',
