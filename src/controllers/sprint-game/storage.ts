@@ -16,7 +16,7 @@ export const sprintSettings = {
   isPlayingAudio: false,
   timers: <NodeJS.Timer[]>[],
   isAuth: false,
-  blockGame: true,
+  isRunGame: false,
 };
 
 export const resetStorage = () => {
@@ -36,7 +36,7 @@ export const resetStorage = () => {
   sprintSettings.progressLevel = 0;
   sprintSettings.isPlayingAudio = false;
   sprintSettings.isAuth = false;
-  sprintSettings.blockGame = true;
+  sprintSettings.isRunGame = true;
 
   sprintSettings.timers.forEach((timer) => clearInterval(timer));
 
