@@ -2,6 +2,7 @@ import { initAuth } from '../pages/auth-page';
 import { dictionary } from '../pages/dictionary';
 import { initMainPage, initAboutTeam } from '../pages/main-page';
 import { initMiniGames } from '../pages/mini-games';
+import { initSprintGamePage } from '../pages/sprint-game-page';
 import { router } from './router-storage';
 
 export const initRouter = (element: HTMLElement) => {
@@ -23,6 +24,12 @@ export const initRouter = (element: HTMLElement) => {
     })
     .add('dictionary/(:num)/(:num)', (group: string, page: string) => {
       dictionary(element, { group, page });
+    })
+    .add('sprint-game', () => {
+      initSprintGamePage(element, 'common');
+    })
+    .add('sprint-game/(:num)/(:num)', (group: string, page: string) => {
+      initSprintGamePage(element, 'book', { group, page });
     })
     .check()
     .addUriListener();
