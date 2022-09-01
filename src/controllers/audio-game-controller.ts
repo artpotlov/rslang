@@ -36,6 +36,7 @@ export async function createGameWords(sendParams?: IObjectString) {
       word: el.word,
       image: el.image,
       audio: el.audio,
+      translate: el.wordTranslate,
       word1: answers[0],
       word2: answers[1],
       word3: answers[2],
@@ -51,6 +52,7 @@ let words: {
   word: string;
   image: string;
   audio: string;
+  translate: string;
   word1: string;
   word2: string;
   word3: string;
@@ -60,17 +62,41 @@ let words: {
 
 let idx = 0;
 
+function answer() {
+  const btn: HTMLElement | null = document.querySelector('.dont-know-btn');
+  if (!btn) return;
+
+  btn.dataset.game = 'next';
+  btn.innerText = 'Далее';
+  document.querySelector('.hidden-picture')?.classList.add('bg-transparent');
+}
+
+function rightAnswer() {
+  const listItems: NodeListOf<HTMLElement> | undefined =
+    document.querySelectorAll('[data-game="answer"]');
+  listItems?.forEach((el) => {
+    if (el.innerText === words[idx].translate) {
+      el.querySelector('.right')?.classList.remove('hidden');
+      el.classList.add('list-none', 'text-lime-400');
+    }
+  });
+}
+
+function wrongAnswer(target: HTMLElement) {
+  target.querySelector('.wrong')?.classList.remove('hidden');
+  target.classList.add('list-none', 'text-red-400');
+}
+
 async function clickStartBtn(
   target: EventTarget,
   element: HTMLElement,
   gameParams?: IObjectString,
 ) {
-  if (!(target instanceof HTMLButtonElement)) {
+  if (!(target instanceof HTMLElement)) {
     return;
   }
 
   const rootElement: HTMLElement = element;
-  const btn = target;
 
   switch (target.dataset.game) {
     case 'start-game':
@@ -78,14 +104,18 @@ async function clickStartBtn(
       rootElement.innerHTML = game({ API_URL, ...words[idx] });
       break;
     case 'dont-know':
-      btn.dataset.game = 'next';
-      btn.innerText = 'Далее';
-      document.querySelector('.hidden-picture')?.classList.add('bg-transparent');
+      answer();
+      rightAnswer();
       // 'показать правильное слово и запомнить как ошибку'
       break;
     case 'next':
       idx += 1;
       rootElement.innerHTML = game({ API_URL, ...words[idx] });
+      break;
+    case 'answer':
+      answer();
+      if (target.innerText !== words[idx].translate) wrongAnswer(target);
+      rightAnswer();
       break;
     default:
       break;

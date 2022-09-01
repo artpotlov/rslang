@@ -18,14 +18,34 @@
   <button class="hover:bg-blue-700 hover:rounded-full p-2 py-3.5 w-fit self-center">
     <i class="fa-solid fa-volume-high fa-3x"></i>
   </button>
-  <ul class="list-decimal list-inside flex gap-4">
-    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word1}}</li>
-    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word2}}</li>
-    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word3}}</li>
-    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word4}}</li>
-    <li data-answer="" class="p-2 cursor-pointer rounded hover:bg-blue-700">{{word5}}</li>
+  <ul data-game="answer" class="list-decimal list-inside flex gap-4">
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+      <i class="hidden right fa-solid fa-circle-check"></i>
+      <i class="hidden wrong fa-solid fa-circle-xmark"></i>
+      {{word1}}
+    </li>
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+      <i class="hidden right fa-solid fa-circle-check"></i>
+      <i class="hidden wrong fa-solid fa-circle-xmark"></i>
+      {{word2}}
+    </li>
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+      <i class="hidden right fa-solid fa-circle-check"></i>
+      <i class="hidden wrong fa-solid fa-circle-xmark"></i>
+      {{word3}}
+    </li>
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+      <i class="hidden right fa-solid fa-circle-check"></i>
+      <i class="hidden wrong fa-solid fa-circle-xmark"></i>
+      {{word4}}
+    </li>
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+      <i class="hidden right fa-solid fa-circle-check"></i>
+      <i class="hidden wrong fa-solid fa-circle-xmark"></i>
+      {{word5}}
+    </li>
   </ul>
-  <button data-game="dont-know" class="border-2 border-slate-400 border-solid rounded-md p-3.5 self-center hover:bg-blue-700">Не знаю</button>
+  <button data-game="dont-know" class="dont-know-btn border-2 border-slate-400 border-solid rounded-md p-3.5 self-center hover:bg-blue-700">Не знаю</button>
 </div>
 
 <div class="hidden">
