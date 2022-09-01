@@ -3,6 +3,7 @@ import { getChunkWords } from '../utils/api';
 import { getRandomNumber } from '../utils/random-number';
 import { shuffle } from '../utils/shuffle';
 import { IObjectString, TDataDictionary } from '../types/types';
+import { API_URL } from '../const';
 
 export function getGameDifficulty() {
   const selectDifficulty: HTMLSelectElement | null = document.querySelector(
@@ -74,16 +75,17 @@ async function clickStartBtn(
   switch (target.dataset.game) {
     case 'start-game':
       words = await createGameWords(gameParams);
-      rootElement.innerHTML = game(words[idx]);
+      rootElement.innerHTML = game({ API_URL, ...words[idx] });
       break;
     case 'dont-know':
       btn.dataset.game = 'next';
       btn.innerText = 'Далее';
+      document.querySelector('.hidden-picture')?.classList.add('bg-transparent');
       // 'показать правильное слово и запомнить как ошибку'
       break;
     case 'next':
       idx += 1;
-      rootElement.innerHTML = game(words[idx]);
+      rootElement.innerHTML = game({ API_URL, ...words[idx] });
       break;
     default:
       break;

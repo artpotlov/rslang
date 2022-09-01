@@ -1,6 +1,13 @@
 <div class="game place-self-center flex flex-col gap-4">
   <div class="self-center flex flex-col">
-    <div class="w-32 h-32 rounded-full border-black border self-center"></div>
+    <div class="relative">
+    <img 
+      class="w-32 h-32 rounded-full border-black border self-center"
+      src="{{API_URL}}/{{image}}"
+      alt='image'
+    />
+    <div class="hidden-picture transition-all duration-1000 absolute bottom-0 left-0 w-32 h-32 rounded-full border-black border self-center bg-indigo-50"></div>
+    </div>
     <div class="self-center">
       <button class="hover:bg-blue-700 hover:rounded-full p-2 px-2.5">
         <i class="fa-solid fa-volume-high"></i>
