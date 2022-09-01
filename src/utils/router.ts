@@ -35,6 +35,9 @@ export const initRouter = (element: HTMLElement) => {
     .add('audio', () => {
       initAudioGame(element);
     })
+    .add('audio/(:num)/(:num)', (group: string, page: string) => {
+      initAudioGame(element, { group, page });
+    })
     .check()
     .addUriListener();
 };
