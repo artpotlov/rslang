@@ -2,13 +2,12 @@ import './main-page.scss';
 import '../components/audio-game/audio.scss';
 import header from '../components/main-page/header.hbs';
 import { initHeaderEvent } from '../controllers/main-page/header-controller';
-import { initStartEvent, createGameWords } from '../controllers/audio-game-controller';
+import { initStartEvent } from '../controllers/audio-game-controller';
 import { IObjectString } from '../types/types';
 
 import main from '../components/audio-game/main.hbs';
-import game from '../components/audio-game/game.hbs';
 
-export async function initAudioGame(element: HTMLElement, gameParams?: IObjectString | undefined) {
+export async function initAudioGame(element: HTMLElement, gameParams?: IObjectString) {
   document.title = 'Аудиовызов';
 
   const rootElement: HTMLElement = element;
@@ -21,13 +20,13 @@ export async function initAudioGame(element: HTMLElement, gameParams?: IObjectSt
 
   const mainElement: HTMLElement | null = document.querySelector('.main');
   if (!mainElement) throw new Error('mainElement is null');
+  mainElement.innerHTML = main();
 
   if (gameParams) {
-    mainElement.innerHTML = game(await createGameWords(gameParams));
-  } else {
-    mainElement.innerHTML = main();
+    const difficulty = document.querySelector('.fieldset');
+    difficulty?.classList.add('hidden');
   }
 
-  initStartEvent(mainElement);
+  initStartEvent(mainElement, gameParams);
   initHeaderEvent();
 }

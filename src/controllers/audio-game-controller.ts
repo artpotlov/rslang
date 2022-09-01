@@ -46,11 +46,6 @@ export async function createGameWords(sendParams?: IObjectString) {
   return gameWords;
 }
 
-/* const gameWords = nextWord({
-  group: '0',
-  page: '5',
-}); */
-
 let words: {
   word: string;
   image: string;
@@ -64,7 +59,11 @@ let words: {
 
 let idx = 0;
 
-async function clickStartBtn(target: EventTarget, element: HTMLElement) {
+async function clickStartBtn(
+  target: EventTarget,
+  element: HTMLElement,
+  gameParams?: IObjectString,
+) {
   if (!(target instanceof HTMLButtonElement)) {
     return;
   }
@@ -74,7 +73,7 @@ async function clickStartBtn(target: EventTarget, element: HTMLElement) {
 
   switch (target.dataset.game) {
     case 'start-game':
-      words = await createGameWords();
+      words = await createGameWords(gameParams);
       rootElement.innerHTML = game(words[idx]);
       break;
     case 'dont-know':
@@ -91,10 +90,10 @@ async function clickStartBtn(target: EventTarget, element: HTMLElement) {
   }
 }
 
-export const initStartEvent = (element: HTMLElement) => {
+export const initStartEvent = (element: HTMLElement, gameParams?: IObjectString) => {
   element.addEventListener('click', (event: MouseEvent): void => {
     if (event.target) {
-      clickStartBtn(event.target, element);
+      clickStartBtn(event.target, element, gameParams);
     }
   });
 };
