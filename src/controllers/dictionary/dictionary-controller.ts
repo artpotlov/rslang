@@ -1,15 +1,26 @@
 import { IObjectString, TDataDictionary, TUserData, TUserWord } from '../../types/types';
 import { createUserWord, updateUserWord } from '../../utils/api';
 import templateCard from '../../components/dictionary/card.hbs';
-import { API_URL, DINAMIC_CLASSES, GROUP_DIFFICULT, KEYS_LS, StatusDifficulty } from '../../const';
+import groupButtonsTemplate from '../../components/dictionary/groupButtons.hbs';
+import {
+  API_URL,
+  DINAMIC_CLASSES,
+  GROUP_DIFFICULT,
+  KEYS_LS,
+  MAX_PAGE_DICTIONARY,
+  StatusDifficulty,
+} from '../../const';
 import stopSound from '../../helpers/stopSount';
 import playSound from '../../helpers/playSound';
 import { getLSData } from '../../utils/local-storage';
 import checkRequest from '../../utils/checkRequest';
 import getPageWords from './getPageWords';
+import setPagination from '../pagination/setPagination';
+import checkLernedPage from '../../helpers/checkLernedPage';
 
 class DictionaryController {
   dictionaryContentElement;
+  dictionaryElement;
   dataDictionary;
   soundData: HTMLAudioElement[] | [];
   userData;
@@ -17,12 +28,14 @@ class DictionaryController {
   isDifficultGroup;
 
   constructor(
+    dictionaryElement: HTMLElement,
     dictionaryContentElement: HTMLElement,
     dataDictionary: TDataDictionary[],
     paramsDictionary: IObjectString,
     userData: TUserData | null,
   ) {
     this.dictionaryContentElement = dictionaryContentElement;
+    this.dictionaryElement = dictionaryElement;
     this.dataDictionary = dataDictionary;
     this.soundData = [];
     this.paramsDictionary = paramsDictionary;
@@ -30,7 +43,41 @@ class DictionaryController {
     this.isDifficultGroup = paramsDictionary.group === GROUP_DIFFICULT;
   }
 
+  setPaginationView = (isLernedPage = true) => {
+    const { page, group } = this.paramsDictionary;
+    if (group !== GROUP_DIFFICULT) {
+      setPagination(this.dictionaryElement, isLernedPage, MAX_PAGE_DICTIONARY, +page, +group);
+    }
+  };
+
+  deletePagination = () => {
+    const paginationElement = this.dictionaryElement.querySelector('[data-role="pagination"]');
+    if (paginationElement instanceof HTMLElement) paginationElement.remove();
+  };
+
+  setGroupButtons = (isLernedPage = true) => {
+    this.dictionaryElement.insertAdjacentHTML(
+      'afterbegin',
+      groupButtonsTemplate({ userData: this.userData, DINAMIC_CLASSES, isLernedPage }),
+    );
+  };
+
+  deleteButtonGames = () => {
+    const buttonGamesElement = this.dictionaryElement.querySelector(
+      '[data-role="group-buttons__games"]',
+    );
+    if (buttonGamesElement instanceof HTMLElement) buttonGamesElement.remove();
+  };
+
+  setLernedPage = () => {
+    this.dictionaryContentElement.classList.add(...DINAMIC_CLASSES.bgLernedPage);
+  };
+
   setDictionaryView = () => {
+    const isLernedPage = checkLernedPage(this.dataDictionary);
+    if (isLernedPage) this.setLernedPage();
+    this.setGroupButtons(isLernedPage);
+    this.setPaginationView(isLernedPage);
     this.dictionaryContentElement.innerHTML = templateCard({
       API_URL,
       idUser: this.userData?.userId,
@@ -126,7 +173,7 @@ class DictionaryController {
       sendParams.optional = { ...optional, ...sendParams.optional };
     }
     await this.changeWord(wordData, sendParams, setLernedCard);
-    if (this.isDifficultGroup) card.classList.add(DINAMIC_CLASSES.invisible);
+    this.changeStylePage();
   };
 
   changeWord = async (wordData: TDataDictionary, sendParams: TUserWord, callback: () => void) => {
@@ -141,24 +188,36 @@ class DictionaryController {
       checkRequest(status);
       callback();
     }
+    wordData.optional = wordData.optional
+      ? { ...wordData.optional, lerned: true }
+      : { lerned: true };
   };
 
-  setDictionary = () => {
-    this.setDictionaryView();
-    this.initEvent();
+  changeStylePage = () => {
+    if (!checkLernedPage(this.dataDictionary)) return;
+    this.deleteButtonGames();
+    this.deletePagination();
+    this.setPaginationView();
+    this.setLernedPage();
   };
 }
 
 export const initDictionaryController = async (paramsDictionary: IObjectString) => {
-  const dictionaryContentElement = document.querySelector('[data-role="dictionary__content"]');
+  const dictionaryElement = document.querySelector('[data-role="dictionary"]');
+  if (!(dictionaryElement instanceof HTMLElement)) return;
+  const dictionaryContentElement = dictionaryElement.querySelector(
+    '[data-role="dictionary__content"]',
+  );
   if (!(dictionaryContentElement instanceof HTMLElement)) return;
   const pageWords = await getPageWords(paramsDictionary);
   const userData: TUserData | null = getLSData(KEYS_LS.userData);
   const dictionaryController = new DictionaryController(
+    dictionaryElement,
     dictionaryContentElement,
     pageWords,
     paramsDictionary,
     userData,
   );
-  dictionaryController.setDictionary();
+  dictionaryController.setDictionaryView();
+  dictionaryController.initEvent();
 };

@@ -40,7 +40,12 @@ const getPagesData = (
   return pages;
 };
 
-const initPagination = (maxPage: number, currentPage: number, curentGroup?: number) => {
+const initPagination = (
+  isLernedPage: boolean,
+  maxPage: number,
+  currentPage: number,
+  curentGroup?: number,
+) => {
   const { origin, hash } = window.location;
   const [location] = hash.split('/');
   const baseUrl = `${origin}/${location}/`;
@@ -58,6 +63,7 @@ const initPagination = (maxPage: number, currentPage: number, curentGroup?: numb
     pages,
     nextLink,
     prevLink,
+    isLernedPage,
   });
 };
 

@@ -1,4 +1,4 @@
-<section class="max-w-screen-xl mx-auto p-2">
+<section class="max-w-screen-xl mx-auto p-2" data-role='group-buttons'>
   <div class="bg-white px-2 py-3 flex items-center border-t border-gray-200 p-2 sm:px-6 rounded-md">
     <div class="flex grow items-center justify-between">
       <div class="flex-1 grow flex items-center justify-center items-stretch justify-start">
@@ -22,14 +22,17 @@
                     shadow-[inset_0_0_15px_0_{{DINAMIC_CLASSES.colorGroupSeven}}]">сложные слова</a>
             {{/if}}
           </div>
+          {{#if isLernedPage}}
+          {{else}}
           {{#if userData}}
-          <div class="flex gap-1">
+          <div class="flex gap-1" data-role='group-buttons__games'>
             <span class="py-2 text-sm font-medium">Игры:</span>
             <a href="#"
               class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(0,0,0,0.3)]">Аудиовызов</a>
             <a href="#"
               class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(0,0,0,0.3)]">Спринт</a>
           </div>
+          {{/if}}
           {{/if}}
         </div>
       </div>

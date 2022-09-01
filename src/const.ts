@@ -34,6 +34,7 @@ export const DINAMIC_CLASSES = {
   colorGroupFive: 'rgba(202,138,4,0.5)',
   colorGroupSix: 'rgba(234,88,12,0.5)',
   colorGroupSeven: 'rgba(255,28,28,0.5)',
+  bgLernedPage: ['bg-gradient-to-r', 'from-white', 'via-green-100', 'to-green-50'],
 };
 
 export const MAX_PAGE_DICTIONARY = 30;
