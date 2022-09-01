@@ -3,7 +3,6 @@ import {
   IBaseUser,
   ICreateUser,
   ICreateUserResponse,
-  IGetUserDataResponse,
   IObjectString,
   ISignInResponse,
   IStatisticInput,
@@ -11,6 +10,7 @@ import {
   IUserAggregateWordsInput,
   IUserAggregateWordsResponse,
   IUserInput,
+  IUserTokenResponse,
   IUserWordInput,
   IWordParamsResponse,
   RequestMethod,
@@ -84,7 +84,22 @@ export const getChunkWords = async (
   };
 };
 
-export const checkUser = async (userInputData: IUserInput) => {
+export const getNewTokens = async (userInputData: IUserInput): Promise<IUserTokenResponse> => {
+  const { userId, token } = userInputData;
+  const url = `${API_URL}/users/${userId}/tokens`;
+  const headers: HeadersInit = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  };
+  const params = getRequestParams(RequestMethod.GET, headers);
+  const response = await fetch(url, params);
+  return {
+    status: response.status,
+    params: response.ok ? await response.json() : null,
+  };
+};
+
+export const getUserData = async (userInputData: IUserInput) => {
   const { userId, token } = userInputData;
   const url = `${API_URL}/users/${userId}`;
   const headers: HeadersInit = {
@@ -93,12 +108,10 @@ export const checkUser = async (userInputData: IUserInput) => {
   };
   const params = getRequestParams(RequestMethod.GET, headers);
   const response = await fetch(url, params);
-
-  if (response.status !== 200) return false;
-
-  const userData: IGetUserDataResponse = await response.json();
-
-  return userData.id === userId;
+  return {
+    status: response.status,
+    params: response.ok ? await response.json() : null,
+  };
 };
 
 export const getWordParams = async (
