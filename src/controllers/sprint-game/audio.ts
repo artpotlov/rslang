@@ -13,7 +13,7 @@ export const playSoundWord = (url: string) => {
 
 export const playSoundRes = (isCorrectAnswer: boolean) => {
   const audio = isCorrectAnswer
-    ? new Audio('./assets/sprint-game/sounds/correct.wav')
-    : new Audio('./assets/sprint-game/sounds/wrong.wav');
+    ? new Audio('./assets/sprint-game/sounds/correct.mp3')
+    : new Audio('./assets/sprint-game/sounds/wrong.mp3');
   audio.play();
 };
