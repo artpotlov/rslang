@@ -134,14 +134,14 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
   }
 }
 
-function pressingKeys(key: string) {
+function pressingKeys(event: KeyboardEvent) {
   const dontKnowBtn = document.querySelector('.dont-know-btn');
-  if (key === 'Enter') {
-    const event = new MouseEvent('click', { bubbles: true });
-    dontKnowBtn?.dispatchEvent(event);
+  if (event.key === 'Enter') {
+    const customEvent = new MouseEvent('click', { bubbles: true });
+    dontKnowBtn?.dispatchEvent(customEvent);
   }
 
-  if (key === ' ' && words) {
+  if (event.key === ' ' && words) {
     playSoundWord(`${API_URL}/${words[idx].word.audio}`);
   }
 
@@ -149,9 +149,9 @@ function pressingKeys(key: string) {
 
   const answersItems = document.querySelectorAll('[data-game="answer"]');
   answersItems.forEach((el, i) => {
-    if (key === String(i) && key !== '0') {
-      const event = new MouseEvent('click', { bubbles: true });
-      el.dispatchEvent(event);
+    if (event.key === String(i) && event.key !== '0') {
+      const customEvent = new MouseEvent('click', { bubbles: true });
+      el.dispatchEvent(customEvent);
     }
   });
 }
@@ -163,7 +163,5 @@ export const initStartEvent = (element: HTMLElement, gameParams?: IObjectString)
     }
   });
 
-  document.addEventListener('keyup', ({ key }) => {
-    pressingKeys(key);
-  });
+  document.addEventListener('keyup', pressingKeys);
 };
