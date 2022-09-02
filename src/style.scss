@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply h-full;
+  }
+
   #app {
-    @apply flex flex-col justify-between;
+    @apply h-full flex flex-col justify-between;
   }
 }

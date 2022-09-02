@@ -1,8 +1,3 @@
-html,
-body {
-  height: 100%;
-}
-
 @media screen and (max-width: 767px) {
   .menu {
     display: flex;
@@ -18,7 +13,7 @@ body {
     transform: translateX(-100%);
     transition: 0.4s all ease-in-out;
   }
-  
+
   .open {
     .menu {
       transform: translateX(0);

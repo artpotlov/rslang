@@ -1,4 +1,33 @@
 import { router } from '../../utils/router-storage';
+import { deleteLSData, getLSData } from '../../utils/local-storage';
+import { IUserData } from '../../types/types';
+
+let isAuth = false;
+
+const updateBtnAuthView = () => {
+  const btnAuthText = document.querySelector<HTMLButtonElement>(
+    '[data-header="header__btn-auth"] span',
+  );
+
+  if (!btnAuthText) return;
+
+  if (isAuth) {
+    btnAuthText.textContent = `Выйти`;
+  } else {
+    btnAuthText.textContent = 'Войти';
+  }
+};
+
+const clickBtnAuth = () => {
+  if (isAuth) {
+    deleteLSData('userData');
+    isAuth = false;
+    updateBtnAuthView();
+    return;
+  }
+
+  router.navigateTo('auth');
+};
 
 const clickHeaderEvent = (target: EventTarget, element: Element) => {
   if (!(target instanceof HTMLElement)) {
@@ -13,8 +42,7 @@ const clickHeaderEvent = (target: EventTarget, element: Element) => {
       element.classList.remove('open');
       break;
     case 'header__btn-auth':
-      if (element.classList.contains('open')) element.classList.remove('open');
-      router.navigateTo('#auth');
+      clickBtnAuth();
       break;
     default:
       break;
@@ -30,4 +58,10 @@ export const initHeaderEvent = () => {
       clickHeaderEvent(target, headerContainer);
     }
   });
+
+  const userData = getLSData<IUserData>('userData');
+  if (!userData) return;
+  if (userData.userId) isAuth = true;
+
+  updateBtnAuthView();
 };
