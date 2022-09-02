@@ -31,6 +31,9 @@ export const initSprintGameController = async (mode: TSprintGameMode, params?: I
     await loadGame(sprintGameElement, params);
   } else {
     router.navigateTo('sprint-game');
+  }
+
+  if (mode === 'common') {
     sprintGameElement.innerHTML = welcomeTemplate({ isAuth: sprintSettings.isAuth });
   }
 
