@@ -34,10 +34,7 @@ export async function createGameWords(sendParams?: IObjectString) {
     answers[getRandomNumber(0, answersCount - 1)] = el.wordTranslate;
 
     return {
-      word: el.word,
-      image: el.image,
-      audio: el.audio,
-      translate: el.wordTranslate,
+      word: el,
       word1: answers[0],
       word2: answers[1],
       word3: answers[2],
@@ -50,10 +47,7 @@ export async function createGameWords(sendParams?: IObjectString) {
 }
 
 let words: {
-  word: string;
-  image: string;
-  audio: string;
-  translate: string;
+  word: TDataDictionary;
   word1: string;
   word2: string;
   word3: string;
@@ -79,7 +73,7 @@ function rightAnswer() {
   listItems?.forEach((el) => {
     const listItem = el;
     listItem.dataset.game = 'inactive';
-    if (el.innerText === words[idx].translate) {
+    if (el.innerText === words[idx].word.wordTranslate) {
       el.querySelector('.right')?.classList.remove('hidden');
       el.classList.add('list-none', 'text-lime-400');
     }
@@ -106,7 +100,7 @@ async function clickStartBtn(
     case 'start-game':
       words = await createGameWords(gameParams);
       rootElement.innerHTML = game({ API_URL, ...words[idx] });
-      playSoundWord(`${API_URL}/${words[idx].audio}`);
+      playSoundWord(`${API_URL}/${words[idx].word.audio}`);
       break;
     case 'dont-know':
       answer();
@@ -116,11 +110,11 @@ async function clickStartBtn(
     case 'next':
       idx += 1;
       rootElement.innerHTML = game({ API_URL, ...words[idx] });
-      playSoundWord(`${API_URL}/${words[idx].audio}`);
+      playSoundWord(`${API_URL}/${words[idx].word.audio}`);
       break;
     case 'answer':
       answer();
-      if (target.innerText !== words[idx].translate) {
+      if (target.innerText !== words[idx].word.wordTranslate) {
         wrongAnswer(target);
         playSoundRes(false);
       } else {
@@ -129,7 +123,7 @@ async function clickStartBtn(
       rightAnswer();
       break;
     case 'play-audio':
-      playSoundWord(`${API_URL}/${words[idx].audio}`);
+      playSoundWord(`${API_URL}/${words[idx].word.audio}`);
       break;
     default:
       break;

@@ -3,7 +3,7 @@
     <div class="relative">
     <img 
       class="w-32 h-32 rounded-full border-black border self-center"
-      src="{{API_URL}}/{{image}}"
+      src="{{API_URL}}/{{word.image}}"
       alt='image'
     />
     <div class="hidden-picture transition-all duration-1000 absolute bottom-0 left-0 w-32 h-32 rounded-full border-black border self-center bg-indigo-50"></div>
@@ -12,7 +12,7 @@
       <button data-game="play-audio" class="hover:bg-blue-700 hover:rounded-full p-2 px-2.5">
         <i class="fa-solid fa-volume-high pointer-events-none"></i>
       </button>
-      <span class="pr-2.5">{{word}}</span>
+      <span class="pr-2.5">{{word.word}}</span>
     </div>
   </div>
   <button data-game="play-audio" class="hover:bg-blue-700 hover:rounded-full p-2 py-3.5 w-fit self-center">
