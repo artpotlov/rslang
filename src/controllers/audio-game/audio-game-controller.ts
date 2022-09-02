@@ -1,9 +1,10 @@
-import game from '../components/audio-game/game.hbs';
-import { getChunkWords } from '../utils/api';
-import { getRandomNumber } from '../utils/random-number';
-import { shuffle } from '../utils/shuffle';
-import { IObjectString, TDataDictionary } from '../types/types';
-import { API_URL } from '../const';
+import game from '../../components/audio-game/game.hbs';
+import { getChunkWords } from '../../utils/api';
+import { getRandomNumber } from '../../utils/random-number';
+import { playSoundWord, playSoundRes } from '../sprint-game/audio';
+import { shuffle } from '../../utils/shuffle';
+import { IObjectString, TDataDictionary } from '../../types/types';
+import { API_URL } from '../../const';
 
 export function getGameDifficulty() {
   const selectDifficulty: HTMLSelectElement | null = document.querySelector(
@@ -64,17 +65,20 @@ let idx = 0;
 
 function answer() {
   const btn: HTMLElement | null = document.querySelector('.dont-know-btn');
-  if (!btn) return;
+  const image: HTMLElement | null = document.querySelector('.hidden-picture');
+  if (!btn || !image) return;
 
   btn.dataset.game = 'next';
   btn.innerText = 'Далее';
-  document.querySelector('.hidden-picture')?.classList.add('bg-transparent');
+  image.style.background = 'transparent';
 }
 
 function rightAnswer() {
   const listItems: NodeListOf<HTMLElement> | undefined =
     document.querySelectorAll('[data-game="answer"]');
   listItems?.forEach((el) => {
+    const listItem = el;
+    listItem.dataset.game = 'inactive';
     if (el.innerText === words[idx].translate) {
       el.querySelector('.right')?.classList.remove('hidden');
       el.classList.add('list-none', 'text-lime-400');
@@ -102,6 +106,7 @@ async function clickStartBtn(
     case 'start-game':
       words = await createGameWords(gameParams);
       rootElement.innerHTML = game({ API_URL, ...words[idx] });
+      playSoundWord(`${API_URL}/${words[idx].audio}`);
       break;
     case 'dont-know':
       answer();
@@ -111,11 +116,20 @@ async function clickStartBtn(
     case 'next':
       idx += 1;
       rootElement.innerHTML = game({ API_URL, ...words[idx] });
+      playSoundWord(`${API_URL}/${words[idx].audio}`);
       break;
     case 'answer':
       answer();
-      if (target.innerText !== words[idx].translate) wrongAnswer(target);
+      if (target.innerText !== words[idx].translate) {
+        wrongAnswer(target);
+        playSoundRes(false);
+      } else {
+        playSoundRes(true);
+      }
       rightAnswer();
+      break;
+    case 'play-audio':
+      playSoundWord(`${API_URL}/${words[idx].audio}`);
       break;
     default:
       break;

@@ -2,7 +2,7 @@ import './main-page.scss';
 import '../components/audio-game/audio.scss';
 import header from '../components/main-page/header.hbs';
 import { initHeaderEvent } from '../controllers/main-page/header-controller';
-import { initStartEvent } from '../controllers/audio-game-controller';
+import { initStartEvent } from '../controllers/audio-game/audio-game-controller';
 import { IObjectString } from '../types/types';
 
 import main from '../components/audio-game/main.hbs';

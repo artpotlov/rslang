@@ -9,14 +9,14 @@
     <div class="hidden-picture transition-all duration-1000 absolute bottom-0 left-0 w-32 h-32 rounded-full border-black border self-center bg-indigo-50"></div>
     </div>
     <div class="self-center">
-      <button class="hover:bg-blue-700 hover:rounded-full p-2 px-2.5">
-        <i class="fa-solid fa-volume-high"></i>
+      <button data-game="play-audio" class="hover:bg-blue-700 hover:rounded-full p-2 px-2.5">
+        <i class="fa-solid fa-volume-high pointer-events-none"></i>
       </button>
       <span class="pr-2.5">{{word}}</span>
     </div>
   </div>
-  <button class="hover:bg-blue-700 hover:rounded-full p-2 py-3.5 w-fit self-center">
-    <i class="fa-solid fa-volume-high fa-3x"></i>
+  <button data-game="play-audio" class="hover:bg-blue-700 hover:rounded-full p-2 py-3.5 w-fit self-center">
+    <i class="fa-solid fa-volume-high fa-3x pointer-events-none"></i>
   </button>
   <ul data-game="answer" class="list-decimal list-inside flex gap-4">
     <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
