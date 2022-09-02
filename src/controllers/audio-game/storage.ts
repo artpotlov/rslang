@@ -15,6 +15,7 @@ export const audioGameSettings = {
   isPlayingAudio: false,
   isAuth: false,
   isRunGame: false,
+  hasAnswer: false,
 };
 
 export const resetStorage = () => {

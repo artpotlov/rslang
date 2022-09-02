@@ -2,6 +2,7 @@ import game from '../../components/audio-game/game.hbs';
 import { getChunkWords } from '../../utils/api';
 import { getRandomNumber } from '../../utils/random-number';
 import { playSoundWord, playSoundRes } from '../sprint-game/audio';
+import { audioGameSettings } from './storage';
 import { shuffle } from '../../utils/shuffle';
 import { IObjectString, TDataDictionary } from '../../types/types';
 import { API_URL } from '../../const';
@@ -68,6 +69,8 @@ function answer() {
   hiddenAnswerItems.forEach((el) => {
     el.classList.toggle('hidden');
   });
+
+  audioGameSettings.hasAnswer = true;
 }
 
 function rightAnswer() {
@@ -88,11 +91,7 @@ function wrongAnswer(target: HTMLElement) {
   target.classList.add('list-none', 'text-red-400');
 }
 
-async function clickStartBtn(
-  target: EventTarget,
-  element: HTMLElement,
-  gameParams?: IObjectString,
-) {
+async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?: IObjectString) {
   if (!(target instanceof HTMLElement)) {
     return;
   }
@@ -113,6 +112,7 @@ async function clickStartBtn(
       break;
     case 'next':
       idx += 1;
+      audioGameSettings.hasAnswer = false;
       rootElement.innerHTML = game({ API_URL, ...words[idx] });
       playSoundWord(`${API_URL}/${words[idx].word.audio}`);
       break;
@@ -134,10 +134,36 @@ async function clickStartBtn(
   }
 }
 
+function pressingKeys(key: string) {
+  const dontKnowBtn = document.querySelector('.dont-know-btn');
+  if (key === 'Enter') {
+    const event = new MouseEvent('click', { bubbles: true });
+    dontKnowBtn?.dispatchEvent(event);
+  }
+
+  if (key === ' ' && words) {
+    playSoundWord(`${API_URL}/${words[idx].word.audio}`);
+  }
+
+  if (audioGameSettings.hasAnswer) return;
+
+  const answersItems = document.querySelectorAll('[data-game="answer"]');
+  answersItems.forEach((el, i) => {
+    if (key === String(i) && key !== '0') {
+      const event = new MouseEvent('click', { bubbles: true });
+      el.dispatchEvent(event);
+    }
+  });
+}
+
 export const initStartEvent = (element: HTMLElement, gameParams?: IObjectString) => {
   element.addEventListener('click', (event: MouseEvent): void => {
     if (event.target) {
-      clickStartBtn(event.target, element, gameParams);
+      clickBtns(event.target, element, gameParams);
     }
+  });
+
+  document.addEventListener('keyup', ({ key }) => {
+    pressingKeys(key);
   });
 };
