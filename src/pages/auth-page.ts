@@ -1,8 +1,11 @@
 import authTemplate from '../components/auth/index.hbs';
+import headerTemplate from '../components/main-page/header.hbs';
+import footerTemplate from '../components/main-page/footer.hbs';
 import { initAuthController } from '../controllers/auth/auth-controller';
 import { IUserData } from '../types/types';
 import { getLSData } from '../utils/local-storage';
 import { router } from '../utils/router-storage';
+import { initHeaderEvent } from '../controllers/main-page/header-controller';
 
 export const initAuth = (element: HTMLElement) => {
   document.title = 'Авторизация';
@@ -13,7 +16,10 @@ export const initAuth = (element: HTMLElement) => {
   }
 
   const rootElement = element;
-  rootElement.innerHTML = authTemplate();
+  rootElement.innerHTML = headerTemplate();
+  rootElement.innerHTML += authTemplate();
+  rootElement.innerHTML += footerTemplate();
 
+  initHeaderEvent();
   initAuthController();
 };
