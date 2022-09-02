@@ -59,12 +59,15 @@ let idx = 0;
 
 function answer() {
   const btn: HTMLElement | null = document.querySelector('.dont-know-btn');
-  const image: HTMLElement | null = document.querySelector('.hidden-picture');
-  if (!btn || !image) return;
+  const hiddenAnswerItems: NodeListOf<HTMLElement> | null =
+    document.querySelectorAll('.hidden-answer');
+  if (!btn || !hiddenAnswerItems) return;
 
   btn.dataset.game = 'next';
   btn.innerText = 'Далее';
-  image.style.background = 'transparent';
+  hiddenAnswerItems.forEach((el) => {
+    el.classList.toggle('hidden');
+  });
 }
 
 function rightAnswer() {
@@ -103,6 +106,7 @@ async function clickStartBtn(
       playSoundWord(`${API_URL}/${words[idx].word.audio}`);
       break;
     case 'dont-know':
+      playSoundRes(false);
       answer();
       rightAnswer();
       // 'показать правильное слово и запомнить как ошибку'
