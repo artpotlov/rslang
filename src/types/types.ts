@@ -140,11 +140,6 @@ export interface IUserAggregateWordsResponse {
     | [
         {
           paginatedResults: IUserAggregateBase[];
-          totalCount: [
-            {
-              count: number;
-            },
-          ];
         },
       ]
     | null;
