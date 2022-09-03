@@ -2,7 +2,7 @@ import game from '../../components/audio-game/game.hbs';
 import { getChunkWords } from '../../utils/api';
 import { getRandomNumber } from '../../utils/random-number';
 import { playSoundWord, playSoundRes } from '../sprint-game/audio';
-import { audioGameSettings } from './storage';
+import { audioGameSettings, successWords, wrongWords } from './storage';
 import { shuffle } from '../../utils/shuffle';
 import { IObjectString, TDataDictionary } from '../../types/types';
 import { API_URL } from '../../const';
@@ -108,10 +108,15 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
       playSoundRes(false);
       answer();
       rightAnswer();
-      // 'показать правильное слово и запомнить как ошибку'
+      wrongWords.push(words[idx].word);
       break;
     case 'next':
       idx += 1;
+      if (!words[idx]) {
+        console.log(wrongWords);
+        console.log(successWords);
+        return;
+      }
       audioGameSettings.hasAnswer = false;
       rootElement.innerHTML = game({ API_URL, ...words[idx] });
       playSoundWord(`${API_URL}/${words[idx].word.audio}`);
@@ -119,9 +124,13 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
     case 'answer':
       answer();
       if (target.innerText !== words[idx].word.wordTranslate) {
+        wrongWords.push(words[idx].word);
         wrongAnswer(target);
         playSoundRes(false);
+        console.log(wrongWords);
       } else {
+        successWords.push(words[idx].word);
+        console.log(successWords);
         playSoundRes(true);
       }
       rightAnswer();
