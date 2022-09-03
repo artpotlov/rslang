@@ -88,6 +88,5 @@ export const renderResultsView = (
 
   if (!sprintGameElement) return;
 
-  const rootElement = sprintGameElement;
-  rootElement.innerHTML = resultTemplate({ successWords, wrongWords, score });
+  sprintGameElement.innerHTML = resultTemplate({ successWords, wrongWords, score });
 };
