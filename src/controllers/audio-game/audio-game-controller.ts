@@ -2,7 +2,7 @@ import game from '../../components/audio-game/game.hbs';
 import resultTemplate from '../../components/audio-game/result.hbs';
 import { getChunkWords } from '../../utils/api';
 import { getRandomNumber } from '../../utils/random-number';
-import { playSoundWord, playSoundRes } from '../sprint-game/audio';
+import { playSoundWord, playSoundRes } from '../sprint-game/audio'; // функция воспроизведения аудио использует sprint-game storage!
 import { audioGameSettings, successWords, wrongWords, resetStorage, words } from './storage';
 import { shuffle } from '../../utils/shuffle';
 import { IObjectString, TDataDictionary } from '../../types/types';
@@ -72,14 +72,14 @@ function rightAnswer() {
     listItem.dataset.game = 'inactive';
     if (el.innerText === words[audioGameSettings.idx].word.wordTranslate) {
       el.querySelector('.right')?.classList.remove('hidden');
-      el.classList.add('list-none', 'text-lime-400');
+      el.classList.add('list-none', 'text-lime-600');
     }
   });
 }
 
 function wrongAnswer(target: HTMLElement) {
   target.querySelector('.wrong')?.classList.remove('hidden');
-  target.classList.add('list-none', 'text-red-400');
+  target.classList.add('list-none', 'text-red-500');
 }
 const score = 10;
 
@@ -133,16 +133,17 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
         wrongWords.push(words[audioGameSettings.idx].word);
         wrongAnswer(target);
         playSoundRes(false);
-        console.log(wrongWords);
       } else {
         successWords.push(words[audioGameSettings.idx].word);
-        console.log(successWords);
         playSoundRes(true);
       }
       rightAnswer();
       break;
     case 'play-audio':
       playSoundWord(`${API_URL}/${words[audioGameSettings.idx].word.audio}`);
+      break;
+    case 'play-audio_results':
+      playSoundWord(`${API_URL}/${words.find((el) => el.word.id === target.id)?.word.audio}`);
       break;
     default:
       break;
@@ -164,7 +165,7 @@ function pressingKeys(event: KeyboardEvent) {
 
   const answersItems = document.querySelectorAll('[data-game="answer"]');
   answersItems.forEach((el, i) => {
-    if (event.key === String(i) && event.key !== '0') {
+    if (event.key === String(i + 1)) {
       const customEvent = new MouseEvent('click', { bubbles: true });
       el.dispatchEvent(customEvent);
     }

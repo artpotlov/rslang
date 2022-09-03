@@ -1,15 +1,18 @@
-<button data-game="btn-close"
-        class="w-10 h-10 absolute top-20 right-8 text-indigo-50 transition-colors hover:text-gray-300 active:text-gray-500">
-  <i class="w-full h-full fa-solid fa-close pointer-events-none"></i>
-</button>
+<div class="relative text-indigo-500 p-10 border bg-white md:min-w-[512px] min-w-[300px] max-w-lg max-h-[512px] overflow-y-auto">
+  <button data-game="btn-close"
+    class="w-10 h-10 absolute top-4 right-2 text-gray-600 transition-colors hover:text-gray-400 active:text-gray-600">
+    <i class="w-full h-full fa-solid fa-close pointer-events-none"></i>
+  </button>
 
-<div class="text-indigo-500 p-10 border bg-white min-w-[512px] max-w-lg max-h-[512px] overflow-y-auto">
   <h1 class="text-3xl text-center mb-4">Результаты</h1>
 
   {{#if successWords}}
     <h2 class="text-green-500 mb-2">Правильные ответы</h2>
     {{#each successWords}}
-      <div class="w-full flex justify-between items-center mb-1">
+      <div class="w-full flex gap-2 items-center mb-1">
+        <button id={{id}} data-game="play-audio_results" class="hover:bg-blue-200 hover:rounded-full p-2 px-2.5">
+          <i class="fa-solid fa-volume-high pointer-events-none"></i>
+        </button>
         <p>{{word}} - {{wordTranslate}}</p>
       </div>
     {{/each}}
@@ -18,7 +21,10 @@
   {{#if wrongWords}}
     <h2 class="text-red-500 my-2">Неправильные ответы</h2>
     {{#each wrongWords}}
-      <div class="w-full flex justify-between items-center mb-1">
+      <div class="w-full flex gap-2 items-center mb-1">
+        <button id={{id}} data-game="play-audio_results" class="hover:bg-blue-200 hover:rounded-full p-2 px-2.5">
+          <i class="fa-solid fa-volume-high pointer-events-none"></i>
+        </button>
         <p>{{word}} - {{wordTranslate}}</p>
       </div>
     {{/each}}

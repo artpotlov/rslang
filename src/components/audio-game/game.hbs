@@ -6,41 +6,41 @@
       alt='image'
     />
     <div class="word-answer self-center">
-      <button data-game="play-audio" class="hover:bg-blue-700 hover:rounded-full p-2 px-2.5">
+      <button data-game="play-audio" class="hover:bg-blue-200 hover:rounded-full p-2 px-2.5">
         <i class="fa-solid fa-volume-high pointer-events-none"></i>
       </button>
       <span class="pr-2.5">{{word.word}}</span>
     </div>
   </div>
-  <button data-game="play-audio" class="hidden-answer hover:bg-blue-700 hover:rounded-full p-2 py-3.5 w-fit self-center">
+  <button data-game="play-audio" class="hidden-answer hover:bg-blue-200 hover:rounded-full p-2 py-3.5 w-fit self-center">
     <i class="fa-solid fa-volume-high fa-3x pointer-events-none"></i>
   </button>
-  <ul data-game="answer" class="list-decimal list-inside flex gap-4">
-    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+  <ul class="list-decimal list-inside flex gap-4">
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-200">
       <i class="hidden right fa-solid fa-circle-check"></i>
       <i class="hidden wrong fa-solid fa-circle-xmark"></i>
       {{word1}}
     </li>
-    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-200">
       <i class="hidden right fa-solid fa-circle-check"></i>
       <i class="hidden wrong fa-solid fa-circle-xmark"></i>
       {{word2}}
     </li>
-    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-200">
       <i class="hidden right fa-solid fa-circle-check"></i>
       <i class="hidden wrong fa-solid fa-circle-xmark"></i>
       {{word3}}
     </li>
-    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-200">
       <i class="hidden right fa-solid fa-circle-check"></i>
       <i class="hidden wrong fa-solid fa-circle-xmark"></i>
       {{word4}}
     </li>
-    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-700">
+    <li data-game="answer" class="p-2 cursor-pointer rounded hover:bg-blue-200">
       <i class="hidden right fa-solid fa-circle-check"></i>
       <i class="hidden wrong fa-solid fa-circle-xmark"></i>
       {{word5}}
     </li>
   </ul>
-  <button data-game="dont-know" class="dont-know-btn border-2 border-slate-400 border-solid rounded-md p-3.5 self-center hover:bg-blue-700">Не знаю</button>
+  <button data-game="dont-know" class="dont-know-btn border-2 border-slate-400 border-solid rounded-md p-3.5 self-center hover:bg-blue-200">Не знаю</button>
 </div>
