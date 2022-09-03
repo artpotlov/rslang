@@ -5,10 +5,18 @@ export enum RequestMethod {
   DELETE = 'DELETE',
 }
 
-export interface IUserData {
-  message: string;
+export interface IUserToken {
   token: string;
   refreshToken: string;
+}
+
+export interface IUserTokenResponse {
+  status: number;
+  params: IUserToken | null;
+}
+
+export interface IUserData extends IUserToken {
+  message: string;
   userId: string;
   name: string;
 }
@@ -31,6 +39,7 @@ export interface IBaseUser {
 export interface ICreateUser extends IBaseUser {
   name: string;
 }
+
 export interface ICreateUserError {
   error: {
     status: string;
@@ -67,5 +76,111 @@ export type TDataDictionary = {
 
 export type TDataDictionaryResponse = {
   status: number;
-  params: TDataDictionary;
+  params: TDataDictionary[];
 };
+
+export type TSprintGameMode = 'common' | 'book';
+
+export interface IUserInput {
+  userId: string;
+  token: string;
+}
+
+export interface IGetUserData {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface IGetUserDataResponse {
+  status: number;
+  params: IGetUserData | null;
+}
+
+export interface IGameWordStats {
+  countCorrectAnswer: number;
+  countWrongAnswer: number;
+}
+
+export interface IWordParams {
+  difficulty: 'easy' | 'hard';
+  optional: {
+    learned: boolean;
+    countRepeated?: number;
+    sprintGame?: IGameWordStats;
+    audioGame?: IGameWordStats;
+  };
+}
+
+export interface IWordParamsResponse {
+  status: number;
+  params: IWordParams | null;
+}
+
+export interface IUserWordInput extends IUserInput {
+  wordId: string;
+  params?: IWordParams;
+}
+
+export interface IUserAggregateWordsInput extends IUserInput {
+  group: number;
+  page?: number;
+  wordsPerPage: number;
+  isLearnedWords: boolean;
+}
+
+export interface IUserAggregateBase extends TDataDictionary {
+  _id?: string;
+  userWord?: IWordParams;
+}
+
+export interface IUserAggregateWordsResponse {
+  status: number;
+  params:
+    | [
+        {
+          paginatedResults: IUserAggregateBase[];
+        },
+      ]
+    | null;
+}
+
+export interface IGameStatistic {
+  countNewWords: number;
+  countCorrectAnswer: number;
+  countWords: number;
+  longSeries: number;
+  score: number;
+}
+
+export interface IStatisticBase {
+  date: string;
+  learnedWords: number;
+  sprintGame?: IGameStatistic;
+  audioGame?: IGameStatistic;
+}
+
+export interface IStatistic {
+  learnedWords: number;
+  optional: {
+    lastChange: IStatisticBase;
+    days: {
+      allDays: IStatisticBase[];
+    };
+  };
+}
+
+export interface IStatisticResponse {
+  status: number;
+  params: {
+    id: number;
+  } & IStatistic;
+}
+
+export interface IStatisticInput extends IUserInput {
+  params: IStatistic;
+}
+
+export type TTypeGame = 'sprint' | 'audio';
+
+export type TStatMode = 'sprint' | 'audio' | 'book';
