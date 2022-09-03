@@ -2,6 +2,7 @@ import dictionaryTemplate from '../components/dictionary/index.hbs';
 import headerTemplate from '../components/header/header.hbs';
 import footerTemplate from '../components/footer/footer.hbs';
 import { initDictionaryController } from '../controllers/dictionary/dictionary-controller';
+import { initHeaderEvent } from '../controllers/header/header-controller';
 import { TITLES_PAGE } from '../const';
 import getColorGroup from '../helpers/getColorGroup';
 
@@ -15,4 +16,5 @@ export const dictionary = (element: HTMLElement, paramsDictionary = { group: '0'
   rootElement.insertAdjacentHTML('beforeend', dictionaryTemplate({ colorGroup }));
   rootElement.insertAdjacentHTML('beforeend', footerTemplate());
   initDictionaryController(paramsDictionary);
+  initHeaderEvent();
 };

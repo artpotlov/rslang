@@ -1,12 +1,12 @@
 import authTemplate from '../components/auth/index.hbs';
-import headerTemplate from '../components/main-page/header.hbs';
-import footerTemplate from '../components/main-page/footer.hbs';
+import headerTemplate from '../components/header/header.hbs';
+import footerTemplate from '../components/footer/footer.hbs';
 import { KEYS_LS } from '../const';
 import { initAuthController } from '../controllers/auth/auth-controller';
 import { IUserData } from '../types/types';
 import { getLSData } from '../utils/local-storage';
 import { router } from '../utils/router-storage';
-import { initHeaderEvent } from '../controllers/main-page/header-controller';
+import { initHeaderEvent } from '../controllers/header/header-controller';
 
 export const initAuth = (element: HTMLElement) => {
   document.title = 'Авторизация';
