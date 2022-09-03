@@ -15,9 +15,6 @@ export const initMainPage = (element: HTMLElement): void => {
     ${footer()}
   `;
 
-  const headerContainer: HTMLElement | null = document.querySelector('.header');
-  if (!headerContainer) throw new Error('headerContainer is null');
-
   initHeaderEvent();
   initMainEvent();
 };
@@ -30,9 +27,6 @@ export const initAboutTeam = (element: HTMLElement): void => {
     ${team()}
     ${footer()}
   `;
-
-  const headerContainer: HTMLElement | null = document.querySelector('.header');
-  if (!headerContainer) throw new Error('headerContainer is null');
 
   initHeaderEvent();
 };

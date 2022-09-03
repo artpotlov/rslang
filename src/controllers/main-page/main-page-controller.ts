@@ -3,10 +3,10 @@ const clickMainEvent = (target: EventTarget) => {
     return;
   }
 
-  const popup: HTMLElement | null = document.getElementById('popup__about-app');
-  if (!popup) throw new Error('popup is null');
-  const wrapper: HTMLElement | null = document.getElementById('about-app__wrapper');
-  if (!wrapper) throw new Error('popup is null');
+  const popup = document.querySelector<HTMLElement>('#popup__about-app');
+  if (!popup) return;
+  const wrapper = document.querySelector<HTMLElement>('#about-app__wrapper');
+  if (!wrapper) return;
 
   if (target.dataset.main === 'main__btn-about-app') {
     popup.classList.remove('translate-y-full');

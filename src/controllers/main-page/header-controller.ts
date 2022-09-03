@@ -52,7 +52,7 @@ const clickHeaderEvent = (target: EventTarget, element: Element) => {
 
 export const initHeaderEvent = () => {
   const headerContainer = document.querySelector('.header');
-  if (!headerContainer) throw new Error('headerContainer is null');
+  if (!headerContainer) return;
 
   headerContainer.addEventListener('click', ({ target }): void => {
     if (target) {
