@@ -1,3 +1,4 @@
+import '../components/main-page/main-page.scss';
 import '../components/audio-game/audio.scss';
 import header from '../components/main-page/header.hbs';
 import { initHeaderEvent } from '../controllers/main-page/header-controller';
@@ -11,10 +12,8 @@ export async function initAudioGame(element: HTMLElement, gameParams?: IObjectSt
 
   const rootElement: HTMLElement = element;
   rootElement.innerHTML = `
-    <div class="min-h-full flex flex-col">
-      ${header()}
-      <main class="main flex-auto p-4 flex justify-center items-center bg-blue-900 text-indigo-50"></main>
-    </div>
+    ${header({ activePage: { miniGames: true } })}
+    <main class="main flex-auto p-4 flex justify-center items-center bg-blue-900 text-indigo-50"></main>
   `;
 
   const mainElement: HTMLElement | null = document.querySelector('.main');

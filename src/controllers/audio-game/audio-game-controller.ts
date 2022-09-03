@@ -1,11 +1,13 @@
 import game from '../../components/audio-game/game.hbs';
+import resultTemplate from '../../components/audio-game/result.hbs';
 import { getChunkWords } from '../../utils/api';
 import { getRandomNumber } from '../../utils/random-number';
 import { playSoundWord, playSoundRes } from '../sprint-game/audio';
-import { audioGameSettings, successWords, wrongWords } from './storage';
+import { audioGameSettings, successWords, wrongWords, resetStorage, words } from './storage';
 import { shuffle } from '../../utils/shuffle';
 import { IObjectString, TDataDictionary } from '../../types/types';
 import { API_URL } from '../../const';
+import { router } from '../../utils/router-storage';
 
 export function getGameDifficulty() {
   const selectDifficulty: HTMLSelectElement | null = document.querySelector(
@@ -47,17 +49,6 @@ export async function createGameWords(sendParams?: IObjectString) {
   return gameWords;
 }
 
-let words: {
-  word: TDataDictionary;
-  word1: string;
-  word2: string;
-  word3: string;
-  word4: string;
-  word5: string;
-}[];
-
-let idx = 0;
-
 function answer() {
   const btn: HTMLElement | null = document.querySelector('.dont-know-btn');
   const hiddenAnswerItems: NodeListOf<HTMLElement> | null =
@@ -79,7 +70,7 @@ function rightAnswer() {
   listItems?.forEach((el) => {
     const listItem = el;
     listItem.dataset.game = 'inactive';
-    if (el.innerText === words[idx].word.wordTranslate) {
+    if (el.innerText === words[audioGameSettings.idx].word.wordTranslate) {
       el.querySelector('.right')?.classList.remove('hidden');
       el.classList.add('list-none', 'text-lime-400');
     }
@@ -90,6 +81,19 @@ function wrongAnswer(target: HTMLElement) {
   target.querySelector('.wrong')?.classList.remove('hidden');
   target.classList.add('list-none', 'text-red-400');
 }
+const score = 10;
+
+function endGame(element: HTMLElement) {
+  const rootElement = element;
+  rootElement.innerHTML = resultTemplate({ successWords, wrongWords, score });
+}
+
+const closeGame = () => {
+  resetStorage();
+  // resetGameStatistics();
+  // resetRemoteStatsStore();
+  router.navigateTo('mini-games');
+};
 
 async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?: IObjectString) {
   if (!(target instanceof HTMLElement)) {
@@ -99,44 +103,46 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
   const rootElement: HTMLElement = element;
 
   switch (target.dataset.game) {
+    case 'btn-close':
+      closeGame();
+      break;
     case 'start-game':
-      words = await createGameWords(gameParams);
-      rootElement.innerHTML = game({ API_URL, ...words[idx] });
-      playSoundWord(`${API_URL}/${words[idx].word.audio}`);
+      words.push(...(await createGameWords(gameParams)));
+      rootElement.innerHTML = game({ API_URL, ...words[audioGameSettings.idx] });
+      playSoundWord(`${API_URL}/${words[audioGameSettings.idx].word.audio}`);
       break;
     case 'dont-know':
       playSoundRes(false);
       answer();
       rightAnswer();
-      wrongWords.push(words[idx].word);
+      wrongWords.push(words[audioGameSettings.idx].word);
       break;
     case 'next':
-      idx += 1;
-      if (!words[idx]) {
-        console.log(wrongWords);
-        console.log(successWords);
+      audioGameSettings.idx += 1;
+      if (!words[audioGameSettings.idx]) {
+        endGame(element);
         return;
       }
       audioGameSettings.hasAnswer = false;
-      rootElement.innerHTML = game({ API_URL, ...words[idx] });
-      playSoundWord(`${API_URL}/${words[idx].word.audio}`);
+      rootElement.innerHTML = game({ API_URL, ...words[audioGameSettings.idx] });
+      playSoundWord(`${API_URL}/${words[audioGameSettings.idx].word.audio}`);
       break;
     case 'answer':
       answer();
-      if (target.innerText !== words[idx].word.wordTranslate) {
-        wrongWords.push(words[idx].word);
+      if (target.innerText !== words[audioGameSettings.idx].word.wordTranslate) {
+        wrongWords.push(words[audioGameSettings.idx].word);
         wrongAnswer(target);
         playSoundRes(false);
         console.log(wrongWords);
       } else {
-        successWords.push(words[idx].word);
+        successWords.push(words[audioGameSettings.idx].word);
         console.log(successWords);
         playSoundRes(true);
       }
       rightAnswer();
       break;
     case 'play-audio':
-      playSoundWord(`${API_URL}/${words[idx].word.audio}`);
+      playSoundWord(`${API_URL}/${words[audioGameSettings.idx].word.audio}`);
       break;
     default:
       break;
@@ -151,7 +157,7 @@ function pressingKeys(event: KeyboardEvent) {
   }
 
   if (event.key === ' ' && words) {
-    playSoundWord(`${API_URL}/${words[idx].word.audio}`);
+    playSoundWord(`${API_URL}/${words[audioGameSettings.idx].word.audio}`);
   }
 
   if (audioGameSettings.hasAnswer) return;

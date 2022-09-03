@@ -229,3 +229,12 @@ export interface IStatisticInput extends IUserInput {
 export type TTypeGame = 'sprint' | 'audio';
 
 export type TStatMode = 'sprint' | 'audio' | 'book';
+
+export interface IAudioGameWords {
+  word: IUserAggregateBase;
+  word1: string;
+  word2: string;
+  word3: string;
+  word4: string;
+  word5: string;
+}
