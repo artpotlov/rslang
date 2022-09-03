@@ -20,4 +20,8 @@
     </fieldset>
     <button data-game="start-game" class="border-2 border-slate-400 border-solid rounded-md p-3.5 self-end hover:bg-blue-700">СТАРТ</button>
   </div>
+  {{#unless isAuth}}
+    <p><a href="#auth" class="text-blue-500 transition-colors hover:text-blue-400">Войти или зарегистрироваться</a>,
+      чтобы сохранить результаты игры</p>
+  {{/unless}}
 </div>
