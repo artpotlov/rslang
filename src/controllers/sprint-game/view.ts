@@ -62,15 +62,15 @@ export const updateProgressLevelView = (level: number) => {
 
   if (!progressImgElements) return;
 
-  progressImgElements.forEach((element) => {
-    element.classList.remove('active-progress-level');
-    element.classList.add('disable-progress-level');
+  progressImgElements.forEach((element, i) => {
+    if (i < maxLevel) {
+      progressImgElements[i].classList.remove('disable-progress-level');
+      progressImgElements[i].classList.add('active-progress-level');
+    } else {
+      element.classList.remove('active-progress-level');
+      element.classList.add('disable-progress-level');
+    }
   });
-
-  for (let i = 0; i < maxLevel; i += 1) {
-    progressImgElements[i].classList.remove('disable-progress-level');
-    progressImgElements[i].classList.add('active-progress-level');
-  }
 };
 
 export const updateScoreView = (score: number) => {
