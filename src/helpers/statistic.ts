@@ -212,32 +212,29 @@ export const saveStatistics = async (type: TStatMode, auth: boolean) => {
     resetRemoteStatsStore();
   }
 
-  if (params.optional.lastChange.sprintGame && remStats.optional.lastChange.sprintGame) {
-    params.optional.lastChange.sprintGame.countNewWords +=
-      remStats.optional.lastChange.sprintGame.countNewWords;
-    params.optional.lastChange.sprintGame.countCorrectAnswer +=
-      remStats.optional.lastChange.sprintGame.countCorrectAnswer;
-    params.optional.lastChange.sprintGame.countWords +=
-      remStats.optional.lastChange.sprintGame.countWords;
-    params.optional.lastChange.sprintGame.longSeries =
-      gameStatistics.longSeries > remStats.optional.lastChange.sprintGame.longSeries
+  const current = params.optional.lastChange;
+  const remote = remStats.optional.lastChange;
+
+  if (current.sprintGame && remote.sprintGame) {
+    current.sprintGame.countNewWords += remote.sprintGame.countNewWords;
+    current.sprintGame.countCorrectAnswer += remote.sprintGame.countCorrectAnswer;
+    current.sprintGame.countWords += remote.sprintGame.countWords;
+    current.sprintGame.longSeries =
+      gameStatistics.longSeries > remote.sprintGame.longSeries
         ? gameStatistics.longSeries
-        : remStats.optional.lastChange.sprintGame.longSeries;
-    params.optional.lastChange.sprintGame.score += remStats.optional.lastChange.sprintGame.score;
+        : remote.sprintGame.longSeries;
+    current.sprintGame.score += remote.sprintGame.score;
   }
 
-  if (params.optional.lastChange.audioGame && remStats.optional.lastChange.audioGame) {
-    params.optional.lastChange.audioGame.countNewWords +=
-      remStats.optional.lastChange.audioGame.countNewWords;
-    params.optional.lastChange.audioGame.countCorrectAnswer +=
-      remStats.optional.lastChange.audioGame.countCorrectAnswer;
-    params.optional.lastChange.audioGame.countWords +=
-      remStats.optional.lastChange.audioGame.countWords;
-    params.optional.lastChange.audioGame.longSeries =
-      gameStatistics.longSeries > remStats.optional.lastChange.audioGame.longSeries
+  if (current.audioGame && remote.audioGame) {
+    current.audioGame.countNewWords += remote.audioGame.countNewWords;
+    current.audioGame.countCorrectAnswer += remote.audioGame.countCorrectAnswer;
+    current.audioGame.countWords += remote.audioGame.countWords;
+    current.audioGame.longSeries =
+      gameStatistics.longSeries > remote.audioGame.longSeries
         ? gameStatistics.longSeries
-        : remStats.optional.lastChange.audioGame.longSeries;
-    params.optional.lastChange.audioGame.score += remStats.optional.lastChange.audioGame.score;
+        : remote.audioGame.longSeries;
+    current.audioGame.score += remote.audioGame.score;
   }
 
   updateStatistics({ userId, token, params });
