@@ -1,9 +1,21 @@
 import dictionaryTemplate from '../components/dictionary/index.hbs';
-import { initDictionaryController } from '../controllers/auth/dictionary-controller';
+import headerTemplate from '../components/header/header.hbs';
+import footerTemplate from '../components/footer/footer.hbs';
+import { initDictionaryController } from '../controllers/dictionary/dictionary-controller';
+import { initHeaderEvent } from '../controllers/header/header-controller';
+import { TITLES_PAGE } from '../const';
+import getColorGroup from '../helpers/getColorGroup';
 
 export const dictionary = (element: HTMLElement, paramsDictionary = { group: '0', page: '0' }) => {
-  document.title = 'Электронный учебник';
+  document.title = TITLES_PAGE.dictionary;
   const rootElement = element;
-  rootElement.innerHTML = dictionaryTemplate();
+  const { group } = paramsDictionary;
+  const colorGroup = getColorGroup(group);
+  rootElement.innerHTML = `
+    ${headerTemplate({ activePage: { dictionary: true } })}
+    ${dictionaryTemplate({ colorGroup })}
+    ${footerTemplate()}
+  `;
+  initHeaderEvent();
   initDictionaryController(paramsDictionary);
 };

@@ -1,4 +1,4 @@
-import { API_URL } from '../const';
+import { API_URL, RequestMethod } from '../const';
 import {
   IBaseUser,
   ICreateUser,
@@ -6,6 +6,7 @@ import {
   IGetUserDataResponse,
   IObjectString,
   ISignInResponse,
+  TAggregatedWordRequest,
   IStatisticInput,
   IStatisticResponse,
   IUserAggregateWordsInput,
@@ -14,55 +15,47 @@ import {
   IUserTokenResponse,
   IUserWordInput,
   IWordParamsResponse,
-  RequestMethod,
   TDataDictionaryResponse,
+  TRequestParams,
+  TUserData,
+  TUserWord,
+  TUserWordResponse,
 } from '../types/types';
 
-const getRequestParams = (
-  method: RequestMethod,
-  headers: HeadersInit,
-  body?: BodyInit,
-): RequestInit => {
-  return {
-    method,
-    headers,
-    body,
-  };
+const getRequestParams = <TBody extends object>({
+  method,
+  sendParams,
+  customHeaders,
+}: TRequestParams<TBody>): RequestInit => {
+  const headers = { 'Content-Type': 'application/json' };
+  const paramsRequest: RequestInit = { method, headers };
+  if (sendParams) paramsRequest.body = JSON.stringify(sendParams);
+  if (customHeaders) paramsRequest.headers = { ...headers, ...customHeaders };
+  return paramsRequest;
 };
 
-export const signIn = async (user: IBaseUser): Promise<ISignInResponse> => {
+export const signIn = async (sendParams: IBaseUser): Promise<ISignInResponse> => {
   const url = `${API_URL}/signin`;
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  const body = JSON.stringify(user);
-  const params = getRequestParams(RequestMethod.POST, headers, body);
-
+  const method = RequestMethod.POST;
+  const params = getRequestParams({ method, sendParams });
   const response = await fetch(url, params);
-
   if (!response.ok) {
     return {
       status: response.status,
       params: null,
     };
   }
-
   return {
     status: response.status,
     params: await response.json(),
   };
 };
 
-export const createNewUser = async (user: ICreateUser): Promise<ICreateUserResponse> => {
+export const createNewUser = async (sendParams: ICreateUser): Promise<ICreateUserResponse> => {
   const url = `${API_URL}/users`;
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  const body = JSON.stringify(user);
-  const params = getRequestParams(RequestMethod.POST, headers, body);
-
+  const method = RequestMethod.POST;
+  const params = getRequestParams({ method, sendParams });
   const response = await fetch(url, params);
-
   return {
     status: response.status,
     params: await response.json(),
@@ -74,25 +67,85 @@ export const getChunkWords = async (
 ): Promise<TDataDictionaryResponse> => {
   const queryString = new URLSearchParams(sendParams).toString();
   const url = `${API_URL}/words?${queryString}`;
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  const params = getRequestParams(RequestMethod.GET, headers);
+  const method = RequestMethod.GET;
+  const params = getRequestParams({ method });
   const response = await fetch(url, params);
   return {
     status: response.status,
-    params: await response.json(),
+    params: response.ok ? await response.json() : null,
+  };
+};
+
+export const createUserWord = async (
+  userData: TUserData,
+  idWord: string,
+  sendParams: TUserWord,
+): Promise<TUserWordResponse> => {
+  const { userId, token } = userData;
+  const url = `${API_URL}/users/${userId}/words/${idWord}`;
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.POST;
+  const params = getRequestParams({ method, sendParams, customHeaders });
+  const response = await fetch(url, params);
+  return {
+    status: response.status,
+    params: response.ok ? await response.json() : null,
+  };
+};
+
+export const getUserWord = async (userData: TUserData, idWord: string): Promise<TUserWordResponse> => {
+  const { userId, token } = userData;
+  const url = `${API_URL}/users/${userId}/words/${idWord}`;
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.GET;
+  const params = getRequestParams({ method, customHeaders });
+  const response = await fetch(url, params);
+  return {
+    status: response.status,
+    params: response.ok ? await response.json() : null,
+  };
+};
+
+export const updateUserWord = async (
+  userData: TUserData,
+  idWord: string,
+  sendParams: TUserWord,
+): Promise<TUserWordResponse> => {
+  const { userId, token } = userData;
+  const url = `${API_URL}/users/${userId}/words/${idWord}`;
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.PUT;
+  const params = getRequestParams({ method, sendParams, customHeaders });
+  const response = await fetch(url, params);
+  return {
+    status: response.status,
+    params: response.ok ? await response.json() : null,
+  };
+};
+
+export const getAggregatedWords = async (
+  userData: TUserData,
+  sendParams: Record<string, string>,
+): Promise<TAggregatedWordRequest> => {
+  const { userId, token } = userData;
+  const queryString = new URLSearchParams(sendParams).toString();
+  const url = `${API_URL}/users/${userId}/aggregatedWords?${queryString}`;
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.GET;
+  const params = getRequestParams({ method, customHeaders });
+  const response = await fetch(url, params);
+  return {
+    status: response.status,
+    params: response.ok ? await response.json() : null,
   };
 };
 
 export const getNewTokens = async (userInputData: IUserInput): Promise<IUserTokenResponse> => {
   const { userId, token } = userInputData;
   const url = `${API_URL}/users/${userId}/tokens`;
-  const headers: HeadersInit = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
-  const params = getRequestParams(RequestMethod.GET, headers);
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.GET;
+  const params = getRequestParams({ method, customHeaders });
   const response = await fetch(url, params);
   return {
     status: response.status,
@@ -103,11 +156,9 @@ export const getNewTokens = async (userInputData: IUserInput): Promise<IUserToke
 export const getUserData = async (userInputData: IUserInput): Promise<IGetUserDataResponse> => {
   const { userId, token } = userInputData;
   const url = `${API_URL}/users/${userId}`;
-  const headers: HeadersInit = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
-  const params = getRequestParams(RequestMethod.GET, headers);
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.GET;
+  const params = getRequestParams({ method, customHeaders });
   const response = await fetch(url, params);
   return {
     status: response.status,
@@ -119,16 +170,11 @@ export const getWordParams = async (
   userWordParams: IUserWordInput,
 ): Promise<IWordParamsResponse> => {
   const { userId, wordId, token } = userWordParams;
-
   const url = `${API_URL}/users/${userId}/words/${wordId}`;
-  const headers: HeadersInit = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
-  const params = getRequestParams(RequestMethod.GET, headers);
-
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.GET;
+  const params = getRequestParams({ method, customHeaders });
   const response = await fetch(url, params);
-
   return {
     status: response.status,
     params: response.ok ? await response.json() : null,
@@ -137,17 +183,11 @@ export const getWordParams = async (
 
 export const setWordParams = async (userWordData: IUserWordInput): Promise<IWordParamsResponse> => {
   const { userId, wordId, token, params } = userWordData;
-
   const url = `${API_URL}/users/${userId}/words/${wordId}`;
-  const headers: HeadersInit = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
-  const body: BodyInit = JSON.stringify(params);
-  const requestParams = getRequestParams(RequestMethod.POST, headers, body);
-
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.POST;
+  const requestParams = getRequestParams({ method, customHeaders, sendParams: params });
   const response = await fetch(url, requestParams);
-
   return {
     status: response.status,
     params: response.ok ? await response.json() : null,
@@ -156,17 +196,11 @@ export const setWordParams = async (userWordData: IUserWordInput): Promise<IWord
 
 export const updateWordParams = async (userWordData: IUserWordInput) => {
   const { userId, wordId, token, params } = userWordData;
-
   const url = `${API_URL}/users/${userId}/words/${wordId}`;
-  const headers: HeadersInit = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
-  const body: BodyInit = JSON.stringify(params);
-  const requestParams = getRequestParams(RequestMethod.PUT, headers, body);
-
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.PUT;
+  const requestParams = getRequestParams({ method, customHeaders, sendParams: params });
   const response = await fetch(url, requestParams);
-
   return {
     status: response.status,
     params: response.ok ? await response.json() : null,
@@ -210,14 +244,10 @@ export const getChunkUserWords = async (
     filter: JSON.stringify(filter),
   }).toString();
   const url = `${API_URL}/users/${userId}/aggregatedWords?${queryParams}`;
-  const headers: HeadersInit = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
-  const requestParams = getRequestParams(RequestMethod.GET, headers);
-
-  const response = await fetch(url, requestParams);
-
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.GET;
+  const params = getRequestParams({ method, customHeaders });
+  const response = await fetch(url, params);
   return {
     status: response.status,
     params: response.ok ? await response.json() : null,
@@ -227,14 +257,10 @@ export const getChunkUserWords = async (
 export const getStatistics = async (userParams: IUserInput): Promise<IStatisticResponse> => {
   const { userId, token } = userParams;
   const url = `${API_URL}/users/${userId}/statistics`;
-  const headers: HeadersInit = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
-  const requestParams = getRequestParams(RequestMethod.GET, headers);
-
-  const response = await fetch(url, requestParams);
-
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.GET;
+  const params = getRequestParams({ method, customHeaders });
+  const response = await fetch(url, params);
   return {
     status: response.status,
     params: response.ok ? await response.json() : null,
@@ -246,13 +272,9 @@ export const updateStatistics = async (
 ): Promise<IStatisticResponse> => {
   const { userId, token, params } = sendParams;
   const url = `${API_URL}/users/${userId}/statistics`;
-  const headers: HeadersInit = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
-  const body: BodyInit = JSON.stringify(params);
-  const requestParams = getRequestParams(RequestMethod.PUT, headers, body);
-
+  const customHeaders = { Authorization: `Bearer ${token}` };
+  const method = RequestMethod.PUT;
+  const requestParams = getRequestParams({ method, customHeaders, sendParams: params });
   const response = await fetch(url, requestParams);
 
   return {

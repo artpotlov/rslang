@@ -1,8 +1,7 @@
-import '../components/main-page/main-page.scss';
-import { initHeaderEvent } from '../controllers/main-page/header-controller';
-import header from '../components/main-page/header.hbs';
+import { initHeaderEvent } from '../controllers/header/header-controller';
+import header from '../components/header/header.hbs';
 import miniGames from '../components/main-page/mini-games.hbs';
-import footer from '../components/main-page/footer.hbs';
+import footer from '../components/footer/footer.hbs';
 
 export const initMiniGames = (element: HTMLElement): void => {
   document.title = 'Мини-игры';
