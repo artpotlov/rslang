@@ -8,7 +8,7 @@ export const initMiniGames = (element: HTMLElement): void => {
   document.title = 'Мини-игры';
   const rootElement: HTMLElement = element;
   rootElement.innerHTML = `
-    ${header()}
+    ${header({ activePage: { miniGames: true } })}
     ${miniGames()}
     ${footer()}
   `;

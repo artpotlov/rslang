@@ -11,29 +11,36 @@
     </a>
     <div class="flex gap-8 items-center">
       <nav class="menu bg-indigo-500">
-        <ul class="menu__list m-auto md:flex md:gap-6">
+      <ul class="menu__list m-auto md:flex md:gap-6">
+        {{#with activePage as | page |}}
           <li class=" menu__item">
             <a href="#" data-header="header__menu-link"
-               class="block text-2xl md:text-base transition-colors hover:text-indigo-200">Главная</a>
+               class="block text-2xl md:text-base transition-colors hover:text-indigo-200 {{#if
+                 page.main}}active-page{{/if}}">Главная</a>
           </li>
           <li class="menu__item">
             <a href="#dictionary" data-header="header__menu-link"
-               class="block text-2xl md:text-base transition-colors hover:text-indigo-200">Учебник</a>
+               class="block text-2xl md:text-base transition-colors hover:text-indigo-200 {{#if
+                 page.dictionary}}active-page{{/if}}">Учебник</a>
           </li>
           <li class="menu__item">
             <a href="#mini-games" data-header="header__menu-link"
-               class="block text-2xl md:text-base transition-colors hover:text-indigo-200">Мини-игры</a>
+               class="block text-2xl md:text-base transition-colors hover:text-indigo-200 {{#if
+                 page.miniGames}}active-page{{/if}}">Мини-игры</a>
           </li>
           <li class="menu__item">
             <a href="#statistics" data-header="header__menu-link"
-               class="block text-2xl md:text-base transition-colors hover:text-indigo-200">Статистика</a>
+               class="block text-2xl md:text-base transition-colors hover:text-indigo-200 {{#if
+                 page.statistics}}active-page{{/if}}">Статистика</a>
           </li>
           <li class="menu__item">
             <a href="#about-team" data-header="header__menu-link"
-               class="block text-2xl md:text-base transition-colors hover:text-indigo-200">О
+               class="block text-2xl md:text-base transition-colors hover:text-indigo-200 {{#if
+                 page.team}}active-page{{/if}}">О
               команде</a>
           </li>
         </ul>
+        {{/with}}
       </nav>
       <button data-header="header__btn-auth"
               class="bg-indigo-600 border border-indigo-600 px-4 py-2 rounded-full transition-colors hover:border-indigo-400">

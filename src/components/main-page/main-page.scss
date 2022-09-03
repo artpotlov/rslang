@@ -21,3 +21,12 @@
     }
   }
 }
+
+.active-page:before {
+  content: '• ';
+}
+
+.active-page:hover {
+  color: inherit;
+  cursor: default;
+}

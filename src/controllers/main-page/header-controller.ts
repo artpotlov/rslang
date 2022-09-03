@@ -1,6 +1,7 @@
 import { router } from '../../utils/router-storage';
 import { deleteLSData, getLSData } from '../../utils/local-storage';
 import { IUserData } from '../../types/types';
+import '../../components/main-page/main-page.scss';
 
 let isAuth = false;
 

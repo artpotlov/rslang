@@ -10,7 +10,7 @@ export const initMainPage = (element: HTMLElement): void => {
   document.title = 'Главная страница';
   const rootElement: HTMLElement = element;
   rootElement.innerHTML = `
-    ${header()}
+    ${header({ activePage: { main: true } })}
     ${main()}
     ${footer()}
   `;
@@ -26,7 +26,7 @@ export const initAboutTeam = (element: HTMLElement): void => {
   document.title = 'Наша команда';
   const rootElement: HTMLElement = element;
   rootElement.innerHTML = `
-    ${header()}
+    ${header({ activePage: { team: true } })}
     ${team()}
     ${footer()}
   `;
