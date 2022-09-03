@@ -11,10 +11,11 @@ export const dictionary = (element: HTMLElement, paramsDictionary = { group: '0'
   const rootElement = element;
   const { group } = paramsDictionary;
   const colorGroup = getColorGroup(group);
-  rootElement.innerHTML = '';
-  rootElement.insertAdjacentHTML('beforeend', headerTemplate());
-  rootElement.insertAdjacentHTML('beforeend', dictionaryTemplate({ colorGroup }));
-  rootElement.insertAdjacentHTML('beforeend', footerTemplate());
-  initDictionaryController(paramsDictionary);
+  rootElement.innerHTML = `
+    ${headerTemplate({ activePage: { dictionary: true } })}
+    ${dictionaryTemplate({ colorGroup })}
+    ${footerTemplate()}
+  `;
   initHeaderEvent();
+  initDictionaryController(paramsDictionary);
 };

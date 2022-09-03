@@ -25,7 +25,7 @@ const getColorGroup = (group: string) => {
       color = DINAMIC_CLASSES.colorGroupSeven;
       break;
     default:
-      color = DINAMIC_CLASSES.colorGroupOne;
+      color = '';
   }
   return color;
 };

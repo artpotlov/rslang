@@ -1,4 +1,3 @@
-import '../components/main-page/main-page.scss';
 import { initHeaderEvent } from '../controllers/header/header-controller';
 import header from '../components/header/header.hbs';
 import miniGames from '../components/main-page/mini-games.hbs';
