@@ -9,7 +9,7 @@ import {
   updateWordsView,
 } from './view';
 import { rndTranslateWords, sprintSettings, successWords, wordsStore, wrongWords } from './storage';
-import { gameStatistics, saveStatistics, updateWordStat } from '../../helpers/statistic';
+import { gameStatistics, saveStatistics, updateWordStat } from '../../utils/statistic/statistic';
 import { playSoundRes } from './audio';
 
 const setShuffleWords = (fromArray: IUserAggregateBase[], toArray: IUserAggregateBase[]) => {

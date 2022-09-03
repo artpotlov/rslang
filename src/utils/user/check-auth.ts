@@ -1,6 +1,6 @@
-import { deleteLSData, getLSData, setLSData } from '../utils/local-storage';
-import { IUserData } from '../types/types';
-import { getNewTokens, getUserData } from '../utils/api';
+import { deleteLSData, getLSData, setLSData } from '../local-storage';
+import { IUserData } from '../../types/types';
+import { getNewTokens, getUserData } from '../api';
 
 export const checkUserAuth = async () => {
   const userData = getLSData<IUserData>('userData');

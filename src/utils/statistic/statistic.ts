@@ -7,9 +7,9 @@ import {
   IWordParams,
   TStatMode,
   TTypeGame,
-} from '../types/types';
-import { getLSData } from '../utils/local-storage';
-import { getStatistics, setWordParams, updateStatistics, updateWordParams } from '../utils/api';
+} from '../../types/types';
+import { getLSData } from '../local-storage';
+import { getStatistics, setWordParams, updateStatistics, updateWordParams } from '../api';
 
 const remoteStatsStore: IStatistic[] = [];
 

@@ -3,6 +3,7 @@ import {
   IBaseUser,
   ICreateUser,
   ICreateUserResponse,
+  IGetUserDataResponse,
   IObjectString,
   ISignInResponse,
   IStatisticInput,
@@ -99,7 +100,7 @@ export const getNewTokens = async (userInputData: IUserInput): Promise<IUserToke
   };
 };
 
-export const getUserData = async (userInputData: IUserInput) => {
+export const getUserData = async (userInputData: IUserInput): Promise<IGetUserDataResponse> => {
   const { userId, token } = userInputData;
   const url = `${API_URL}/users/${userId}`;
   const headers: HeadersInit = {

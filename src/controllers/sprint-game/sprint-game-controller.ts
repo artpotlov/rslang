@@ -3,10 +3,10 @@ import loadingTemplate from '../../components/sprint-game/loading.hbs';
 import { initSprintGameEvents } from './events';
 import { IObjectString, TSprintGameMode } from '../../types/types';
 import { resetStorage, sprintSettings } from './storage';
-import { resetGameStatistics, resetRemoteStatsStore } from '../../helpers/statistic';
+import { resetGameStatistics, resetRemoteStatsStore } from '../../utils/statistic/statistic';
 import { loadGame } from './welcome';
 import { router } from '../../utils/router-storage';
-import { checkUserAuth } from '../../helpers/check-auth';
+import { checkUserAuth } from '../../utils/user/check-auth';
 
 const checkUserLogin = async () => {
   sprintSettings.isAuth = await checkUserAuth();

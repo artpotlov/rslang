@@ -3,7 +3,7 @@ import { router } from '../../utils/router-storage';
 import { checkWord } from './game';
 import { resetStorage, sprintSettings, wordsStore } from './storage';
 import { loadGame } from './welcome';
-import { resetGameStatistics, resetRemoteStatsStore } from '../../helpers/statistic';
+import { resetGameStatistics, resetRemoteStatsStore } from '../../utils/statistic/statistic';
 import { playSoundWord } from './audio';
 
 const closeGame = () => {
