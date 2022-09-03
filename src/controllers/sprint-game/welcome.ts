@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import loadingTemplate from '../../components/sprint-game/loading.hbs';
 import { getChunkUserWords, getChunkWords } from '../../utils/api';
 import { runSprintGame } from './game';
@@ -18,28 +17,28 @@ const getCurrentData = async (params: IObjectString) => {
   const { token, userId } = userData;
 
   const tmpWordStore: IUserAggregateBase[] = [];
-  let cycleRequest = true;
 
-  while (cycleRequest) {
-    const response = await getChunkUserWords({
-      group: group - 1,
-      page: page - 1,
-      wordsPerPage: 20,
-      userId,
-      token,
-      isLearnedWords: false,
-    });
+  const response = await getChunkUserWords({
+    group: group - 1,
+    wordsPerPage: 600,
+    userId,
+    token,
+    isLearnedWords: false,
+  });
 
-    if (response.status !== 200 || !response.params) return false;
+  if (response.status !== 200 || !response.params) return false;
 
-    tmpWordStore.push(...response.params[0].paginatedResults);
+  const commonWords = response.params[0].paginatedResults;
 
-    if (page <= 1 || tmpWordStore.length === 20) {
-      cycleRequest = false;
-    } else {
-      page -= 1;
-    }
-  }
+  let countWords = 20;
+  const setFilter = (p: number) => commonWords.filter((word) => word.page === p - 1);
+  let filterRes: IUserAggregateBase[];
+  do {
+    filterRes = setFilter(page);
+    tmpWordStore.push(...filterRes.slice(0, countWords));
+    page -= 1;
+    countWords -= tmpWordStore.length;
+  } while (tmpWordStore.length <= 20 && page >= 1);
 
   if (tmpWordStore.length === 0) return false;
 
