@@ -1,5 +1,6 @@
+{{#if dataDictionary}}
 {{#each dataDictionary}}
-<div class='w-[600px] flex flex-col rounded-3xl shadow-[-10px_-15px_30px_-20px_rgba(0,0,0,.3)] bg-gradient-to-t from-white relative
+<div class='w-[600px] h-fit flex flex-col rounded-3xl shadow-[-10px_-15px_30px_-20px_rgba(0,0,0,.3)] bg-gradient-to-t from-white relative
         {{#if optional/learned}}{{../DINAMIC_CLASSES.cardWordLearned}}{{else}}{{../DINAMIC_CLASSES.cardWordDefault}}{{/if}}
         {{#setDifficultClass difficulty ../DINAMIC_CLASSES.cardWordDifficult}}{{/setDifficultClass}}'
   data-role='dictionary__card' data-id='{{id}}'>
@@ -19,8 +20,8 @@
         {{else}}
         <i class='bi bi-puzzle text-2xl 
                  {{#if ../isDifficultGroup}}cursor-pointer{{/if}}
-                 {{#setDifficultClass difficulty ../DINAMIC_CLASSES.iconWordDifficult 'cursor-pointer'}}{{/setDifficultClass}}' 
-            data-role='dictionary__difficult' title='Сложное'></i>
+                 {{#setDifficultClass difficulty ../DINAMIC_CLASSES.iconWordDifficult 'cursor-pointer'}}{{/setDifficultClass}}'
+           data-role='dictionary__difficult' title='Сложное'></i>
         {{/if}}
         <i class='bi bi-mortarboard text-2xl
                  {{#if optional/learned}}{{../DINAMIC_CLASSES.iconWordLearned}}{{^}}cursor-pointer{{/if}}'
@@ -41,6 +42,15 @@
       <span>{{{ textExample}}}</span>
       <span>{{textExampleTranslate}}</span>
     </div>
+    {{#if ../idUser}}
+    <div class="flex gap-2 flex-wrap ml-auto">
+      <span>Правильных ответов: 0</span>
+      <span>Неправильных ответов: 0</span>
+    </div>
+    {{/if}}
   </div>
 </div>
 {{/each}}
+{{else}}
+Здесь нет слов.
+{{/if}}

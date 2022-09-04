@@ -153,6 +153,7 @@ class DictionaryController {
       } else {
         wordData.difficulty = StatusDifficulty.HARD;
         icon.classList.toggle(DINAMIC_CLASSES.iconWordDifficult);
+        icon.classList.remove('cursor-pointer');
         card.classList.toggle(DINAMIC_CLASSES.cardWordDefault);
         card.classList.toggle(DINAMIC_CLASSES.cardWordDifficult);
       }
@@ -178,6 +179,7 @@ class DictionaryController {
         card.classList.add(DINAMIC_CLASSES.invisible);
       } else {
         icon.classList.add(DINAMIC_CLASSES.iconWordLearned);
+        icon.classList.remove('cursor-pointer');
         card
           .querySelector('[data-role="dictionary__difficult"]')
           ?.classList.add(DINAMIC_CLASSES.invisible);
@@ -238,12 +240,9 @@ export const initDictionaryController = async (paramsDictionary: IObjectString) 
   const dictionaryContentElement = dictionaryElement.querySelector(
     '[data-role="dictionary__content"]',
   );
-
   if (!(dictionaryContentElement instanceof HTMLElement)) return;
-  const pageWords = await getPageWords({
-    group: `${Number(paramsDictionary.group) - 1}`,
-    page: `${Number(paramsDictionary.page) - 1}`,
-  });
+  dictionaryContentElement.innerHTML = 'Загрузка...';
+  const pageWords = await getPageWords(paramsDictionary);
   const userData: TUserData | null = getLSData(KEYS_LS.userData);
   const dictionaryController = new DictionaryController(
     dictionaryElement,
