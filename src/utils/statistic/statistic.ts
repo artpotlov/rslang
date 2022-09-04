@@ -82,6 +82,10 @@ export const updateWordStat = (
 
   const { userWord } = word;
 
+  if (userWord?.difficulty) {
+    params.difficulty = userWord.difficulty;
+  }
+
   if (userWord?.optional.learned && !isCorrectAnswer) {
     updateWordParams({ userId, token, wordId, params });
     return;
@@ -90,8 +94,8 @@ export const updateWordStat = (
   if (
     !userWord?.optional.learned &&
     userWord?.optional.countRepeated &&
-    ((userWord?.difficulty === 'easy' && userWord.optional.countRepeated >= 3) ||
-      (userWord?.difficulty === 'hard' && userWord.optional.countRepeated >= 5))
+    ((userWord?.difficulty === 'easy' && userWord.optional.countRepeated >= 2) ||
+      (userWord?.difficulty === 'hard' && userWord.optional.countRepeated >= 4))
   ) {
     params.optional.learned = true;
     params.optional.countRepeated = 0;
