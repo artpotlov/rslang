@@ -17,12 +17,21 @@ import { API_URL } from '../../const';
 import { router } from '../../utils/router-storage';
 import { getLSData } from '../../utils/local-storage';
 import { checkUserAuth } from '../../utils/user/check-auth';
+import {
+  resetGameStatistics,
+  resetRemoteStatsStore,
+  gameStatistics,
+  saveStatistics,
+  updateWordStat,
+} from '../../utils/statistic/statistic';
 
 export function getGameDifficulty() {
   const selectDifficulty: HTMLSelectElement | null = document.querySelector(
     'select[name="game-difficulty"]',
   );
-  if (!selectDifficulty) throw new Error('selectDifficulty is null');
+  if (!selectDifficulty) {
+    return '1';
+  }
 
   return selectDifficulty.value;
 }
@@ -68,6 +77,7 @@ export async function createGameWords(isAuth: boolean, sendParams?: IObjectStrin
     if (!response) return false;
     const { params } = response;
     if (!params) return false;
+    console.log('resp', response);
 
     const commonWords = params[0].paginatedResults;
     const setFilter = (p: number) => commonWords.filter((word) => word.page === p - 1);
@@ -76,7 +86,9 @@ export async function createGameWords(isAuth: boolean, sendParams?: IObjectStrin
     if (!sendParams) {
       const page = getRandomNumber(1, 30);
       filterRes = setFilter(page);
-      array = [...filterRes];
+      array.push(...filterRes.slice(0, 20));
+      console.log(page);
+      console.log('array', array);
     } else {
       let countWords = 20;
       let page = Number(sendParams?.page);
@@ -94,6 +106,8 @@ export async function createGameWords(isAuth: boolean, sendParams?: IObjectStrin
     });
     array = [...response.params];
   }
+  console.log(sendParams);
+  console.log(array);
   const gameWords = array.map((el) => {
     const answersCount = 5;
     const answers: string[] = shuffle([...array], el)
@@ -111,7 +125,7 @@ export async function createGameWords(isAuth: boolean, sendParams?: IObjectStrin
       word5: answers[4],
     };
   });
-
+  console.log(gameWords);
   return gameWords;
 }
 
@@ -122,6 +136,9 @@ async function getGameData(sendParams?: IObjectString) {
   words.push(...response);
 
   if (words.length === 0) return false;
+
+  console.log(words);
+  console.log(words.length);
   return true;
 }
 
@@ -133,12 +150,23 @@ async function startGame(element: HTMLElement, sendParams?: IObjectString) {
   rootElement.innerHTML = loadingTemplate({ processText: 'Подготавливаю игру' });
   audioGameSettings.isRunGame = await getGameData(sendParams);
 
+  console.log(audioGameSettings.isRunGame);
   if (!audioGameSettings.isRunGame) {
-    router.navigateTo('mini-games');
+    if (sendParams) {
+      router.navigateTo(
+        `dictionary/${Number(sendParams.group) - 1}/${Number(sendParams.page) - 1}`,
+      );
+      return;
+    }
+    router.navigateTo('dictionary');
     return;
   }
 
-  rootElement.innerHTML = game({ API_URL, ...words[audioGameSettings.idx] });
+  rootElement.innerHTML = game({
+    score: audioGameSettings.score,
+    API_URL,
+    ...words[audioGameSettings.idx],
+  });
 }
 
 function answer() {
@@ -152,8 +180,6 @@ function answer() {
   hiddenAnswerItems.forEach((el) => {
     el.classList.toggle('hidden');
   });
-
-  audioGameSettings.hasAnswer = true;
 }
 
 function rightAnswer() {
@@ -167,23 +193,39 @@ function rightAnswer() {
       el.classList.add('list-none', 'text-lime-600');
     }
   });
+
+  audioGameSettings.hasAnswer = true;
+
+  const scoreView: HTMLElement | null = document.querySelector('.audio-score');
+  if (!scoreView) return;
+  scoreView.innerText = String(audioGameSettings.score);
 }
 
 function wrongAnswer(target: HTMLElement) {
   target.querySelector('.wrong')?.classList.remove('hidden');
   target.classList.add('list-none', 'text-red-500');
 }
-const score = 10;
 
 function endGame(element: HTMLElement) {
   const rootElement = element;
-  rootElement.innerHTML = resultTemplate({ successWords, wrongWords, score });
+  rootElement.innerHTML = resultTemplate({
+    successWords,
+    wrongWords,
+    score: audioGameSettings.score,
+  });
+}
+
+function updateStatsInStore() {
+  gameStatistics.countCorrectAnswer = successWords.length;
+  gameStatistics.countWrongAnswer = wrongWords.length;
+  gameStatistics.countWords = gameStatistics.countCorrectAnswer + gameStatistics.countWrongAnswer;
+  gameStatistics.score = audioGameSettings.score;
 }
 
 const closeGame = () => {
   resetStorage();
-  // resetGameStatistics();
-  // resetRemoteStatsStore();
+  resetGameStatistics();
+  resetRemoteStatsStore();
   router.navigateTo('mini-games');
 };
 
@@ -193,7 +235,7 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
   }
 
   const rootElement: HTMLElement = element;
-
+  console.log(audioGameSettings.score);
   switch (target.dataset.game) {
     case 'btn-close':
       closeGame();
@@ -214,7 +256,11 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
         return;
       }
       audioGameSettings.hasAnswer = false;
-      rootElement.innerHTML = game({ API_URL, ...words[audioGameSettings.idx] });
+      rootElement.innerHTML = game({
+        score: audioGameSettings.score,
+        API_URL,
+        ...words[audioGameSettings.idx],
+      });
       playSoundWord(`${API_URL}/${words[audioGameSettings.idx].word.audio}`);
       break;
     case 'answer':
@@ -223,11 +269,16 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
         wrongWords.push(words[audioGameSettings.idx].word);
         wrongAnswer(target);
         playSoundRes(false);
+        updateWordStat(words[audioGameSettings.idx].word, false, 'audio', audioGameSettings.isAuth);
       } else {
+        audioGameSettings.score += 10;
         successWords.push(words[audioGameSettings.idx].word);
         playSoundRes(true);
+        updateWordStat(words[audioGameSettings.idx].word, true, 'audio', audioGameSettings.isAuth);
       }
       rightAnswer();
+      updateStatsInStore();
+      saveStatistics('audio', audioGameSettings.isAuth);
       break;
     case 'play-audio':
       playSoundWord(`${API_URL}/${words[audioGameSettings.idx].word.audio}`);

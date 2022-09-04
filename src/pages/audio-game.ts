@@ -2,7 +2,8 @@ import header from '../components/header/header.hbs';
 import { initHeaderEvent } from '../controllers/header/header-controller';
 import { initStartEvent } from '../controllers/audio-game/audio-game-controller';
 import { IObjectString } from '../types/types';
-
+import { resetGameStatistics, resetRemoteStatsStore } from '../utils/statistic/statistic';
+import { resetStorage } from '../controllers/audio-game/storage';
 import main from '../components/audio-game/main.hbs';
 
 export async function initAudioGame(element: HTMLElement, gameParams?: IObjectString) {
@@ -15,7 +16,7 @@ export async function initAudioGame(element: HTMLElement, gameParams?: IObjectSt
   `;
 
   const mainElement: HTMLElement | null = document.querySelector('.main');
-  if (!mainElement) throw new Error('mainElement is null');
+  if (!mainElement) return;
   mainElement.innerHTML = main();
 
   if (gameParams) {
@@ -23,6 +24,9 @@ export async function initAudioGame(element: HTMLElement, gameParams?: IObjectSt
     difficulty?.classList.add('hidden');
   }
 
+  resetStorage();
+  resetGameStatistics();
+  resetRemoteStatsStore();
   initStartEvent(mainElement, gameParams);
   initHeaderEvent();
 }
