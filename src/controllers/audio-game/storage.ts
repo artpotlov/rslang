@@ -10,13 +10,14 @@ export const wrongWords: IUserAggregateBase[] = [];
 
 export const audioGameSettings = {
   idx: 0,
+  gameDifficulty: '0',
   // score: 0,
   // factor: 10,
   // progressWord: 0,
   // progressLevel: 0,
   isPlayingAudio: false,
   isAuth: false,
-  // isRunGame: false,
+  isRunGame: false,
   hasAnswer: false,
 };
 

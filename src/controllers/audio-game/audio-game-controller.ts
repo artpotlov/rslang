@@ -1,13 +1,23 @@
 import game from '../../components/audio-game/game.hbs';
 import resultTemplate from '../../components/audio-game/result.hbs';
-import { getChunkWords } from '../../utils/api';
+import loadingTemplate from '../../components/sprint-game/loading.hbs';
+import { getChunkWords, getChunkUserWords } from '../../utils/api';
 import { getRandomNumber } from '../../utils/random-number';
 import { playSoundWord, playSoundRes } from '../sprint-game/audio'; // функция воспроизведения аудио использует sprint-game storage!
 import { audioGameSettings, successWords, wrongWords, resetStorage, words } from './storage';
 import { shuffle } from '../../utils/shuffle';
-import { IObjectString, TDataDictionary } from '../../types/types';
+import {
+  IObjectString,
+  TDataDictionary,
+  TDataDictionaryResponse,
+  IUserAggregateWordsResponse,
+  IUserAggregateBase,
+  IUserData,
+} from '../../types/types';
 import { API_URL } from '../../const';
 import { router } from '../../utils/router-storage';
+import { getLSData } from '../../utils/local-storage';
+import { checkUserAuth } from '../../utils/user/check-auth';
 
 export function getGameDifficulty() {
   const selectDifficulty: HTMLSelectElement | null = document.querySelector(
@@ -18,16 +28,49 @@ export function getGameDifficulty() {
   return selectDifficulty.value;
 }
 
-export async function getWords(
-  sendParams = { group: getGameDifficulty(), page: String(getRandomNumber(0, 29)) },
-) {
-  const response = await getChunkWords(sendParams);
+export async function getWords(sendParams: IObjectString) {
+  const response: TDataDictionaryResponse = await getChunkWords(sendParams);
   return response;
 }
 
-export async function createGameWords(sendParams?: IObjectString) {
-  const response = await getWords(sendParams);
-  const array: TDataDictionary[] = [...response.params];
+async function getUserWords(
+  sendParams = { group: audioGameSettings.gameDifficulty, page: String(getRandomNumber(0, 29)) },
+) {
+  const group = Number(sendParams.group);
+  const page = Number(sendParams.page);
+  const userData = getLSData<IUserData>('userData');
+
+  if (!userData) return false;
+
+  const { token, userId } = userData;
+  const response: IUserAggregateWordsResponse = await getChunkUserWords({
+    group,
+    page,
+    wordsPerPage: 20,
+    userId,
+    token,
+    isLearnedWords: true,
+  });
+
+  /* if (response.status !== 200 || !response.params) return false; */
+  return response;
+}
+
+export async function createGameWords(isAuth: boolean, sendParams?: IObjectString) {
+  let array: IUserAggregateBase[];
+  if (isAuth) {
+    console.log('auth yes');
+    const response = await getUserWords(sendParams);
+    if (!response) return false;
+    const { params } = response;
+    if (!params) return false;
+    array = [...params[0].paginatedResults];
+  }
+  const response = await getWords({
+    group: audioGameSettings.gameDifficulty,
+    page: String(getRandomNumber(0, 29)),
+  });
+  array = [...response.params];
   const gameWords = array.map((el) => {
     const answersCount = 5;
     const answers: string[] = shuffle([...array], el)
@@ -47,6 +90,32 @@ export async function createGameWords(sendParams?: IObjectString) {
   });
 
   return gameWords;
+}
+
+async function getGameData(sendParams?: IObjectString) {
+  if (await checkUserAuth()) audioGameSettings.isAuth = true;
+  const response = await createGameWords(audioGameSettings.isAuth, sendParams);
+  if (!response) return false;
+  words.push(...response);
+
+  if (words.length === 0) return false;
+  return true;
+}
+
+async function startGame(element: HTMLElement, sendParams?: IObjectString) {
+  const rootElement = element;
+
+  audioGameSettings.gameDifficulty = getGameDifficulty();
+
+  rootElement.innerHTML = loadingTemplate({ processText: 'Подготавливаю игру' });
+  audioGameSettings.isRunGame = await getGameData(sendParams);
+
+  if (!audioGameSettings.isRunGame) {
+    router.navigateTo('mini-games');
+    return;
+  }
+
+  rootElement.innerHTML = game({ API_URL, ...words[audioGameSettings.idx] });
 }
 
 function answer() {
@@ -107,9 +176,7 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
       closeGame();
       break;
     case 'start-game':
-      words.push(...(await createGameWords(gameParams)));
-      rootElement.innerHTML = game({ API_URL, ...words[audioGameSettings.idx] });
-      playSoundWord(`${API_URL}/${words[audioGameSettings.idx].word.audio}`);
+      startGame(element, gameParams);
       break;
     case 'dont-know':
       playSoundRes(false);
