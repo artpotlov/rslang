@@ -1,6 +1,5 @@
-import '../components/main-page/main-page.scss';
-import header from '../components/main-page/header.hbs';
-import { initHeaderEvent } from '../controllers/main-page/header-controller';
+import header from '../components/header/header.hbs';
+import { initHeaderEvent } from '../controllers/header/header-controller';
 import { initStartEvent } from '../controllers/audio-game/audio-game-controller';
 import { IObjectString } from '../types/types';
 
