@@ -31,11 +31,13 @@ export const resetStorage = () => {
   wrongWords.length = 0;
 
   audioGameSettings.idx = 0;
+  audioGameSettings.gameDifficulty = '0';
   // audioGameSettings.score = 0;
   // audioGameSettings.factor = 10;
   // audioGameSettings.progressWord = 0;
   // audioGameSettings.progressLevel = 0;
   audioGameSettings.isPlayingAudio = false;
   audioGameSettings.isAuth = false;
-  // audioGameSettings.isRunGame = true;
+  audioGameSettings.isRunGame = false;
+  audioGameSettings.hasAnswer = false;
 };
