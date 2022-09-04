@@ -46,12 +46,19 @@ export const initSprintGameEvents = (sprintGameElement: HTMLElement) => {
 
     if (!gameElement) return;
 
+    const index =
+      sprintSettings.index >= wordsStore.length ? wordsStore.length - 1 : sprintSettings.index;
+
     if (key === 'ArrowLeft') {
       checkWord(false);
     }
 
     if (key === 'ArrowRight') {
       checkWord(true);
+    }
+
+    if (key === ' ') {
+      playSoundWord(`${API_URL}/${wordsStore[index].audio}`);
     }
   });
 };
