@@ -27,7 +27,7 @@ export const initSprintGameController = async (mode: TSprintGameMode, params?: I
 
   await checkUserLogin();
 
-  if (sprintSettings.isAuth && mode === 'book' && params) {
+  if (mode === 'book' && params) {
     await loadGame(sprintGameElement, params);
   } else {
     router.navigateTo('sprint-game');

@@ -48,6 +48,15 @@ const getCurrentData = async (params: IObjectString) => {
   return true;
 };
 
+const getCurrentDataWithParams = async (params: IObjectString) => {
+  const group = (Number(params.group) - 1).toString();
+  const page = (Number(params.page) - 1).toString();
+  const response = await getChunkWords({ group, page });
+  if (response.status !== 200 || !response.params) return false;
+  wordsStore.push(...response.params);
+  return true;
+};
+
 const getCommonDataWithoutParams = async () => {
   const group = getLevelValue();
   const userData = getLSData<IUserData>('userData');
@@ -105,10 +114,19 @@ export const loadGame = async (element: HTMLElement, params?: IObjectString) => 
 
   sprintGameElement.innerHTML = loadingTemplate({ processText: 'Подготавливаю игру' });
 
-  if (!sprintSettings.isAuth) {
+  if (!sprintSettings.isAuth && !params) {
     const isRun = await getCommonData();
     if (!isRun) {
       router.navigateTo('mini-games');
+      return;
+    }
+    sprintSettings.isRunGame = isRun;
+  }
+
+  if (!sprintSettings.isAuth && params) {
+    const isRun = await getCurrentDataWithParams(params);
+    if (!isRun) {
+      router.navigateTo('dictionary');
       return;
     }
     sprintSettings.isRunGame = isRun;
