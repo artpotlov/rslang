@@ -77,7 +77,6 @@ export async function createGameWords(isAuth: boolean, sendParams?: IObjectStrin
     if (!response) return false;
     const { params } = response;
     if (!params) return false;
-    console.log('resp', response);
 
     const commonWords = params[0].paginatedResults;
     const setFilter = (p: number) => commonWords.filter((word) => word.page === p - 1);
@@ -87,8 +86,6 @@ export async function createGameWords(isAuth: boolean, sendParams?: IObjectStrin
       const page = getRandomNumber(1, 30);
       filterRes = setFilter(page);
       array.push(...filterRes.slice(0, 20));
-      console.log(page);
-      console.log('array', array);
     } else {
       let countWords = 20;
       let page = Number(sendParams?.page);
@@ -106,8 +103,7 @@ export async function createGameWords(isAuth: boolean, sendParams?: IObjectStrin
     });
     array = [...response.params];
   }
-  console.log(sendParams);
-  console.log(array);
+
   const gameWords = array.map((el) => {
     const answersCount = 5;
     const answers: string[] = shuffle([...array], el)
@@ -125,7 +121,7 @@ export async function createGameWords(isAuth: boolean, sendParams?: IObjectStrin
       word5: answers[4],
     };
   });
-  console.log(gameWords);
+
   return gameWords;
 }
 
@@ -137,8 +133,6 @@ async function getGameData(sendParams?: IObjectString) {
 
   if (words.length === 0) return false;
 
-  console.log(words);
-  console.log(words.length);
   return true;
 }
 
@@ -150,7 +144,6 @@ async function startGame(element: HTMLElement, sendParams?: IObjectString) {
   rootElement.innerHTML = loadingTemplate({ processText: 'Подготавливаю игру' });
   audioGameSettings.isRunGame = await getGameData(sendParams);
 
-  console.log(audioGameSettings.isRunGame);
   if (!audioGameSettings.isRunGame) {
     if (sendParams) {
       router.navigateTo(
@@ -235,7 +228,7 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
   }
 
   const rootElement: HTMLElement = element;
-  console.log(audioGameSettings.score);
+
   switch (target.dataset.game) {
     case 'btn-close':
       closeGame();
