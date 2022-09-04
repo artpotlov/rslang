@@ -32,37 +32,61 @@ export async function getWords(sendParams: IObjectString) {
   return response;
 }
 
-async function getUserWords(
-  sendParams = { group: audioGameSettings.gameDifficulty, page: String(getRandomNumber(0, 29)) },
-) {
-  const group = Number(sendParams.group);
-  const page = Number(sendParams.page);
+async function getUserWords(sendParams?: IObjectString) {
+  let isLearnedWords: boolean;
+  let group: number;
+  if (sendParams) {
+    group = Number(sendParams.group);
+    isLearnedWords = false;
+  } else {
+    group = Number(audioGameSettings.gameDifficulty) + 1;
+    isLearnedWords = true;
+  }
+
   const userData = getLSData<IUserData>('userData');
 
   if (!userData) return false;
 
   const { token, userId } = userData;
   const response: IUserAggregateWordsResponse = await getChunkUserWords({
-    group,
-    page,
-    wordsPerPage: 20,
+    group: group - 1,
+    wordsPerPage: 600,
     userId,
     token,
-    isLearnedWords: true,
+    isLearnedWords,
   });
 
-  /* if (response.status !== 200 || !response.params) return false; */
+  if (response.status !== 200 || !response.params) return false;
+
   return response;
 }
 
 export async function createGameWords(isAuth: boolean, sendParams?: IObjectString) {
-  let array: IUserAggregateBase[];
+  let array: IUserAggregateBase[] = [];
   if (isAuth) {
     const response = await getUserWords(sendParams);
     if (!response) return false;
     const { params } = response;
     if (!params) return false;
-    array = [...params[0].paginatedResults];
+
+    const commonWords = params[0].paginatedResults;
+    const setFilter = (p: number) => commonWords.filter((word) => word.page === p - 1);
+    let filterRes: IUserAggregateBase[];
+
+    if (!sendParams) {
+      const page = getRandomNumber(1, 30);
+      filterRes = setFilter(page);
+      array = [...filterRes];
+    } else {
+      let countWords = 20;
+      let page = Number(sendParams?.page);
+      do {
+        filterRes = setFilter(page);
+        array.push(...filterRes.slice(0, countWords));
+        page -= 1;
+        countWords -= array.length;
+      } while (array.length < 20 && page >= 1);
+    }
   } else {
     const response = await getWords({
       group: audioGameSettings.gameDifficulty,
