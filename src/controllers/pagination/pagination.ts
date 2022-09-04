@@ -41,7 +41,7 @@ const getPagesData = (
 };
 
 const initPagination = (
-  isLernedPage: boolean,
+  isLearnedPage: boolean,
   maxPage: number,
   currentPage: number,
   curentGroup?: number,
@@ -63,7 +63,7 @@ const initPagination = (
     pages,
     nextLink,
     prevLink,
-    isLernedPage,
+    isLearnedPage,
   });
 };
 

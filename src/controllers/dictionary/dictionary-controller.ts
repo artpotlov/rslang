@@ -16,7 +16,7 @@ import { getLSData } from '../../utils/local-storage';
 import checkRequest from '../../utils/checkRequest';
 import getPageWords from './getPageWords';
 import setPagination from '../pagination/setPagination';
-import checkLernedPage from '../../helpers/checkLernedPage';
+import checkLearnedPage from '../../helpers/checkLearnedPage';
 
 class DictionaryController {
   dictionaryContentElement;
@@ -43,10 +43,10 @@ class DictionaryController {
     this.isDifficultGroup = paramsDictionary.group === GROUP_DIFFICULT;
   }
 
-  setPaginationView = (isLernedPage = true) => {
+  setPaginationView = (isLearnedPage = true) => {
     const { page, group } = this.paramsDictionary;
     if (group !== GROUP_DIFFICULT) {
-      setPagination(this.dictionaryElement, isLernedPage, MAX_PAGE_DICTIONARY, +page, +group);
+      setPagination(this.dictionaryElement, isLearnedPage, MAX_PAGE_DICTIONARY, +page, +group);
     }
   };
 
@@ -55,10 +55,10 @@ class DictionaryController {
     if (paginationElement instanceof HTMLElement) paginationElement.remove();
   };
 
-  setGroupButtons = (isLernedPage = true) => {
+  setGroupButtons = (isLearnedPage = true) => {
     this.dictionaryElement.insertAdjacentHTML(
       'afterbegin',
-      groupButtonsTemplate({ userData: this.userData, DINAMIC_CLASSES, isLernedPage }),
+      groupButtonsTemplate({ userData: this.userData, DINAMIC_CLASSES, isLearnedPage }),
     );
   };
 
@@ -69,15 +69,15 @@ class DictionaryController {
     if (buttonGamesElement instanceof HTMLElement) buttonGamesElement.remove();
   };
 
-  setLernedPage = () => {
-    this.dictionaryContentElement.classList.add(...DINAMIC_CLASSES.bgLernedPage);
+  setLearnedPage = () => {
+    this.dictionaryContentElement.classList.add(...DINAMIC_CLASSES.bgLearnedPage);
   };
 
   setDictionaryView = () => {
-    const isLernedPage = checkLernedPage(this.dataDictionary);
-    if (isLernedPage) this.setLernedPage();
-    this.setGroupButtons(isLernedPage);
-    this.setPaginationView(isLernedPage);
+    const isLearnedPage = checkLearnedPage(this.dataDictionary);
+    if (isLearnedPage) this.setLearnedPage();
+    this.setGroupButtons(isLearnedPage);
+    this.setPaginationView(isLearnedPage);
     this.dictionaryContentElement.innerHTML = templateCard({
       API_URL,
       idUser: this.userData?.userId,
@@ -154,25 +154,25 @@ class DictionaryController {
   };
 
   clickLearned = async (wordData: TDataDictionary, icon: HTMLElement, card: HTMLElement) => {
-    if (icon.classList.contains(DINAMIC_CLASSES.iconWordLerned)) return;
-    const sendParams: TUserWord = { difficulty: StatusDifficulty.EASY, optional: { lerned: true } };
-    const setLernedCard = () => {
+    if (icon.classList.contains(DINAMIC_CLASSES.iconWordLearned)) return;
+    const sendParams: TUserWord = { difficulty: StatusDifficulty.EASY, optional: { learned: true } };
+    const setLearnedCard = () => {
       if (this.isDifficultGroup) {
         card.classList.add(DINAMIC_CLASSES.invisible);
       } else {
-        icon.classList.add(DINAMIC_CLASSES.iconWordLerned);
+        icon.classList.add(DINAMIC_CLASSES.iconWordLearned);
         card
           .querySelector('[data-role="dictionary__difficult"]')
           ?.classList.add(DINAMIC_CLASSES.invisible);
         card.classList.remove(DINAMIC_CLASSES.cardWordDifficult, DINAMIC_CLASSES.cardWordDefault);
-        card.classList.add(DINAMIC_CLASSES.cardWordLerned);
+        card.classList.add(DINAMIC_CLASSES.cardWordLearned);
       }
     };
     const { optional } = wordData;
     if (optional) {
       sendParams.optional = { ...optional, ...sendParams.optional };
     }
-    await this.changeWord(wordData, sendParams, setLernedCard);
+    await this.changeWord(wordData, sendParams, setLearnedCard);
     this.changeStylePage();
   };
 
@@ -189,16 +189,16 @@ class DictionaryController {
       callback();
     }
     wordData.optional = wordData.optional
-      ? { ...wordData.optional, lerned: true }
-      : { lerned: true };
+      ? { ...wordData.optional, learned: true }
+      : { learned: true };
   };
 
   changeStylePage = () => {
-    if (!checkLernedPage(this.dataDictionary)) return;
+    if (!checkLearnedPage(this.dataDictionary)) return;
     this.deleteButtonGames();
     this.deletePagination();
     this.setPaginationView();
-    this.setLernedPage();
+    this.setLearnedPage();
   };
 }
 
