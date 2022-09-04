@@ -1,6 +1,6 @@
 import { router } from '../../utils/router-storage';
-import { deleteLSData, getLSData } from '../../utils/local-storage';
-import { IUserData } from '../../types/types';
+import { deleteLSData } from '../../utils/local-storage';
+import { checkUserAuth } from '../../utils/user/check-auth';
 
 let isAuth = false;
 
@@ -49,7 +49,7 @@ const clickHeaderEvent = (target: EventTarget, element: Element) => {
   }
 };
 
-export const initHeaderEvent = () => {
+export const initHeaderEvent = async () => {
   const headerContainer = document.querySelector('.header');
   if (!headerContainer) return;
 
@@ -59,9 +59,12 @@ export const initHeaderEvent = () => {
     }
   });
 
-  const userData = getLSData<IUserData>('userData');
-  if (!userData) return;
-  if (userData.userId) isAuth = true;
-
   updateBtnAuthView();
+
+  const checkAuth = await checkUserAuth();
+
+  if (isAuth !== checkAuth) {
+    isAuth = checkAuth;
+    updateBtnAuthView();
+  }
 };
