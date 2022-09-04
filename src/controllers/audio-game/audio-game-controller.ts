@@ -8,7 +8,6 @@ import { audioGameSettings, successWords, wrongWords, resetStorage, words } from
 import { shuffle } from '../../utils/shuffle';
 import {
   IObjectString,
-  TDataDictionary,
   TDataDictionaryResponse,
   IUserAggregateWordsResponse,
   IUserAggregateBase,
@@ -59,18 +58,18 @@ async function getUserWords(
 export async function createGameWords(isAuth: boolean, sendParams?: IObjectString) {
   let array: IUserAggregateBase[];
   if (isAuth) {
-    console.log('auth yes');
     const response = await getUserWords(sendParams);
     if (!response) return false;
     const { params } = response;
     if (!params) return false;
     array = [...params[0].paginatedResults];
+  } else {
+    const response = await getWords({
+      group: audioGameSettings.gameDifficulty,
+      page: String(getRandomNumber(0, 29)),
+    });
+    array = [...response.params];
   }
-  const response = await getWords({
-    group: audioGameSettings.gameDifficulty,
-    page: String(getRandomNumber(0, 29)),
-  });
-  array = [...response.params];
   const gameWords = array.map((el) => {
     const answersCount = 5;
     const answers: string[] = shuffle([...array], el)
