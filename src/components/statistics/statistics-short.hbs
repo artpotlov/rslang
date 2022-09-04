@@ -1,16 +1,21 @@
-<div class="w-full bg-white px-2 py-3 flex flex-col gap-6 items-center border-t border-gray-200 p-2 rounded-md">
+<div class="w-full bg-white px-2 py-3 mt-2 flex flex-col gap-6 items-center border-t border-gray-200 p-2 rounded-md">
+  <h2 class="text-xl">Сегодня</h2>
   <div class="w-full max-w-[600px] h-52 bg-slate-200 p-2 rounded-xl text-xl">
     <div class="mb-3 h-16 flex align-center border-b border-indigo-500">
       <i class="fa-solid fa-calendar-day fa-2x self-center"></i>
       <span class="ml-4 text-lg font-bold text-center self-center">Всего за день</span>
     </div>
     <div class="pb-1">
-      <span class="inline-block w-14">0</span>
+      <span class="inline-block w-14">{{newWords}}</span>
       <span>новых слов</span>
     </div>
     <div>
-      <span class="inline-block w-14">100%</span>
+      <span class="inline-block w-14">{{learnedWords}}</span>
       <span>изученных слов</span>
+    </div>
+    <div>
+      <span class="inline-block w-14">{{percentCorrectAnswer}}%</span>
+      <span>правильных ответов</span>
     </div>
   </div>
   <div class="max-w-[600px] flex flex-wrap gap-6 justify-center">
@@ -20,15 +25,15 @@
         <span class="ml-4 text-lg font-bold text-center self-center">Аудиовызов</span>
       </div>
       <div class="pb-1">
-        <span class="inline-block w-14">0</span>
+        <span class="inline-block w-14">{{audioGame.countNewWords}}</span>
         <span>новых слов</span>
       </div>
       <div class="pb-1">
-        <span class="inline-block w-14">100%</span>
+        <span class="inline-block w-14">{{audioGame.countCorrectAnswer}}%</span>
         <span>правильных ответов</span>
       </div>
       <div>
-        <span class="inline-block w-14">0</span>
+        <span class="inline-block w-14">{{audioGame.longSeries}}</span>
         <span>ответов в серии</span>
       </div>
     </div>
@@ -38,15 +43,15 @@
         <span class="ml-4 text-lg font-bold text-center self-center">Спринт</span>
       </div>
       <div class="pb-1">
-        <span class="inline-block w-14">0</span>
+        <span class="inline-block w-14">{{sprintGame.countNewWords}}</span>
         <span>новых слов</span>
       </div>
       <div class="pb-1">
-        <span class="inline-block w-14">100%</span>
+        <span class="inline-block w-14">{{sprintGame.countCorrectAnswer}}%</span>
         <span>правильных ответов</span>
       </div>
       <div>
-        <span class="inline-block w-14">0</span>
+        <span class="inline-block w-14">{{sprintGame.longSeries}}</span>
         <span>ответов в серии</span>
       </div>
     </div>

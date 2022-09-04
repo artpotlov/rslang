@@ -1,5 +1,16 @@
 import statisticsShort from '../../components/statistics/statistics-short.hbs';
 import statisticsLong from '../../components/statistics/statistics-long.hbs';
+import { getStatistics } from '../../utils/api';
+import { TUserData } from '../../types/types';
+import { getLSData } from '../../utils/local-storage';
+import { KEYS_LS } from '../../const';
+import { router } from '../../utils/router-storage';
+import {
+  formingStatisticsLong,
+  formingStatisticsShort,
+} from '../../utils/statistic/statisticsForTemplate';
+import initChart from '../../utils/statistic/initChart';
+import checkRequest from '../../utils/checkRequest';
 
 class StatisticsController {
   statisticsElement;
@@ -11,36 +22,27 @@ class StatisticsController {
     this.statisticsContentElement = statisticsContentElement;
   }
 
-  setStatisticsShortView = () => {
-    const statisticShortTemplate = statisticsShort();
-    this.statisticsContentElement.innerHTML = statisticShortTemplate;
-  };
-
-  setStatisticsLongView = () => {
-    const statisticsLongTemplate = statisticsLong();
-    this.statisticsContentElement.innerHTML = statisticsLongTemplate;
-  };
-
-  initEvent = () => {
-    const statisticsToggleElement = this.statisticsElement.querySelector(
-      '[data-role="statistics__toggle"]',
-    );
-    if (!(statisticsToggleElement instanceof HTMLElement)) return;
-    statisticsToggleElement.addEventListener('click', this.clickControl);
-  };
-
-  clickControl = ({ target }: Event) => {
-    if (!(target instanceof HTMLElement)) return;
-    switch (target.dataset.role) {
-      case 'statistics__short-button':
-        this.setStatisticsShortView();
-        break;
-      case 'statistics__long-button':
-        this.setStatisticsLongView();
-        break;
-      default:
-        break;
+  setStatisticsView = async () => {
+    const userData: TUserData | null = getLSData(KEYS_LS.userData);
+    if (!userData) {
+      router.redirectTo('auth');
+      return;
     }
+    const { status, params } = await getStatistics(userData);
+    checkRequest(status);
+    const statistics = formingStatisticsShort(params);
+    const statisticShortTemplate = statisticsShort(statistics);
+    this.statisticsContentElement.innerHTML = statisticShortTemplate;
+    this.statisticsContentElement.insertAdjacentHTML('beforeend', statisticsLong());
+    const newWordsCanvas = document.querySelector('[data-role="statistics-long__new-words"]');
+    if (!(newWordsCanvas instanceof HTMLCanvasElement)) return;
+    const { newWordsForChart, learnedWordsForChart } = formingStatisticsLong(params);
+    initChart(newWordsCanvas, { ...newWordsForChart, title: 'Новые слова' });
+    const learnedWordsCanvas = document.querySelector(
+      '[data-role="statistics-long__learned-words"]',
+    );
+    if (!(learnedWordsCanvas instanceof HTMLCanvasElement)) return;
+    initChart(learnedWordsCanvas, { ...learnedWordsForChart, title: 'Прогресс изучения' });
   };
 }
 
@@ -55,8 +57,7 @@ const initStatisticsController = async () => {
     statisticsElement,
     statisticsContentElement,
   );
-  statisticsController.setStatisticsShortView();
-  statisticsController.initEvent();
+  statisticsController.setStatisticsView();
 };
 
 export default initStatisticsController;
