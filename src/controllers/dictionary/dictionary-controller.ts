@@ -63,9 +63,16 @@ class DictionaryController {
   };
 
   setGroupButtons = (isLearnedPage = true) => {
+    const { group, page } = this.paramsDictionary;
     this.dictionaryElement.insertAdjacentHTML(
       'afterbegin',
-      groupButtonsTemplate({ userData: this.userData, DINAMIC_CLASSES, isLearnedPage }),
+      groupButtonsTemplate({
+        userData: this.userData,
+        DINAMIC_CLASSES,
+        isLearnedPage,
+        group,
+        page,
+      }),
     );
   };
 
@@ -231,8 +238,12 @@ export const initDictionaryController = async (paramsDictionary: IObjectString) 
   const dictionaryContentElement = dictionaryElement.querySelector(
     '[data-role="dictionary__content"]',
   );
+
   if (!(dictionaryContentElement instanceof HTMLElement)) return;
-  const pageWords = await getPageWords(paramsDictionary);
+  const pageWords = await getPageWords({
+    group: `${Number(paramsDictionary.group) - 1}`,
+    page: `${Number(paramsDictionary.page) - 1}`,
+  });
   const userData: TUserData | null = getLSData(KEYS_LS.userData);
   const dictionaryController = new DictionaryController(
     dictionaryElement,

@@ -6,7 +6,7 @@ import { initHeaderEvent } from '../controllers/header/header-controller';
 import { TITLES_PAGE } from '../const';
 import getColorGroup from '../helpers/getColorGroup';
 
-export const dictionary = (element: HTMLElement, paramsDictionary = { group: '0', page: '0' }) => {
+export const dictionary = (element: HTMLElement, paramsDictionary = { group: '1', page: '1' }) => {
   document.title = TITLES_PAGE.dictionary;
   const rootElement = element;
   const { group } = paramsDictionary;

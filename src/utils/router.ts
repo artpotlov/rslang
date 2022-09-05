@@ -30,6 +30,9 @@ export const initRouter = (element: HTMLElement) => {
     .add('sprint-game', () => {
       initSprintGamePage(element, 'common');
     })
+    .add('sprint-game/(:num)/(:num)', (group: string, page: string) => {
+      initSprintGamePage(element, 'book', { group, page });
+    })
     .add('statistics', () => {
       initStatistics(element);
     })
