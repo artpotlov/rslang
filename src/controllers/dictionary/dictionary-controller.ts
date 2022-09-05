@@ -1,5 +1,12 @@
-import { IObjectString, TDataDictionary, TUserData, TUserWord } from '../../types/types';
-import { createUserWord, updateUserWord } from '../../utils/api';
+import {
+  IObjectString,
+  IStatistic,
+  IStatisticInput,
+  TDataDictionary,
+  TUserData,
+  TUserWord,
+} from '../../types/types';
+import { createUserWord, getStatistics, updateStatistics, updateUserWord } from '../../utils/api';
 import templateCard from '../../components/dictionary/card.hbs';
 import groupButtonsTemplate from '../../components/dictionary/groupButtons.hbs';
 import {
@@ -155,7 +162,10 @@ class DictionaryController {
 
   clickLearned = async (wordData: TDataDictionary, icon: HTMLElement, card: HTMLElement) => {
     if (icon.classList.contains(DINAMIC_CLASSES.iconWordLearned)) return;
-    const sendParams: TUserWord = { difficulty: StatusDifficulty.EASY, optional: { learned: true } };
+    const sendParams: TUserWord = {
+      difficulty: StatusDifficulty.EASY,
+      optional: { learned: true },
+    };
     const setLearnedCard = () => {
       if (this.isDifficultGroup) {
         card.classList.add(DINAMIC_CLASSES.invisible);
@@ -173,7 +183,20 @@ class DictionaryController {
       sendParams.optional = { ...optional, ...sendParams.optional };
     }
     await this.changeWord(wordData, sendParams, setLearnedCard);
+    await this.updateStatistics();
     this.changeStylePage();
+  };
+
+  updateStatistics = async () => {
+    if (!this.userData) return;
+    const responseStats = await getStatistics(this.userData);
+    checkRequest(responseStats.status);
+    let { learnedWords, optional } = responseStats.params;
+    learnedWords += 1;
+    optional.lastChange.learnedWords += 1;
+    const statistics: IStatisticInput = { params: { learnedWords, optional }, ...this.userData };
+    const { status } = await updateStatistics(statistics);
+    checkRequest(status);
   };
 
   changeWord = async (wordData: TDataDictionary, sendParams: TUserWord, callback: () => void) => {
