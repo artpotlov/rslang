@@ -1,0 +1,31 @@
+<div class="p-14 flex flex-col items-center bg-white border gap-4">
+  <h1 class="text-4xl text-blue-500 font-semibold">Игра Аудиовызов</h1>
+  <span>"Аудиовызов" - это игра, которая помогает пракачать восприятие речи на слух</span>
+  <ul class="list-disc list-inside">
+    <li>Для выбора ответа используйте мышь или клавиши 1 - 5</li>
+    <li>Для повторного воспроизведения слова используйте пробел</li>
+    <li>Для перехода к следующему слову используйте Enter</li>
+  </ul>
+
+  <div class="flex flex-col gap-2">
+    <fieldset class="fieldset border-2 border-slate-500 border-solid rounded-md px-4 self-end cursor-pointer">
+      <legend>Сложность</legend>
+      <select name="game-difficulty" class="w-full border-none cursor-pointer">
+        <option value="0">1</option>
+        <option value="1">2</option>
+        <option value="2">3</option>
+        <option value="3">4</option>
+        <option value="4">5</option>
+        <option value="5">6</option>
+      </select>
+    </fieldset>
+    <button data-game="start-game"
+            class="px-4 py-2 bg-blue-500 text-white rounded transition-colors hover:bg-blue-400 active:bg-blue-600">
+      Играть
+    </button>
+  </div>
+  {{#unless isAuth}}
+    <p><a href="#auth" class="text-blue-500 transition-colors hover:text-blue-400">Войти или зарегистрироваться</a>,
+      чтобы сохранить результаты игры</p>
+  {{/unless}}
+</div>

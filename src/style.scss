@@ -1,0 +1,15 @@
+@import url('~bootstrap-icons/font/bootstrap-icons.css');
+@import './components/header/header.scss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply h-full;
+  }
+
+  #app {
+    @apply h-full flex flex-col justify-between;
+  }
+}

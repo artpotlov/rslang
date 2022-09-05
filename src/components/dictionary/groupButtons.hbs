@@ -1,0 +1,38 @@
+<section class="w-full max-w-[1264px] mx-auto p-2" data-role='group-buttons'>
+  <div class="bg-white px-2 py-3 flex items-center border-t border-gray-200 p-2 sm:px-6 rounded-md">
+    <div class="flex grow items-center justify-between">
+      <div class="flex-1 grow flex items-center justify-center items-stretch justify-start">
+        <div class="flex grow justify-between items-center gap-3 flex-col-reverse md:flex-row text-gray-700">
+          <div class="flex gap-1">
+            <span class="py-2 text-sm font-medium">Группа:</span>
+            <a href="/#dictionary/1/1" class="bg-white text-gray-700 w-[32px] text-center py-2 rounded-md text-sm font-medium
+                    {{DINAMIC_CLASSES.colorGroupOne}}">1</a>
+            <a href="/#dictionary/2/1" class="bg-white text-gray-700 w-[32px] text-center py-2 rounded-md text-sm font-medium
+                    {{DINAMIC_CLASSES.colorGroupTwo}}">2</a>
+            <a href="/#dictionary/3/1" class="bg-white text-gray-700 w-[32px] text-center py-2 rounded-md text-sm font-medium
+                    {{DINAMIC_CLASSES.colorGroupThree}}">3</a>
+            <a href="/#dictionary/4/1" class="bg-white text-gray-700 w-[32px] text-center py-2 rounded-md text-sm font-medium
+                    {{DINAMIC_CLASSES.colorGroupFour}}">4</a>
+            <a href="/#dictionary/5/1" class="bg-white text-gray-700 w-[32px] text-center py-2 rounded-md text-sm font-medium
+                    {{DINAMIC_CLASSES.colorGroupFive}}">5</a>
+            <a href="/#dictionary/6/1" class="bg-white text-gray-700 w-[32px] text-center py-2 rounded-md text-sm font-medium
+                    {{DINAMIC_CLASSES.colorGroupSix}}">6</a>
+            {{#if userData}}
+            <a href="/#dictionary/7/1" class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium
+                    {{DINAMIC_CLASSES.colorGroupSeven}}">сложные слова</a>
+            {{/if}}
+          </div>
+          {{#if showGames}}
+          <div class="flex gap-1" data-role='group-buttons__games'>
+            <span class="py-2 text-sm font-medium">Игры:</span>
+            <a href="/#audio/{{group}}/{{page}}"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(0,0,0,0.3)]">Аудиовызов</a>
+            <a href="/#sprint-game/{{group}}/{{page}}"
+              class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(0,0,0,0.3)]">Спринт</a>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,32 @@
+@media screen and (max-width: 767px) {
+  .menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    min-width: 320px;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: 0.4s all ease-in-out;
+  }
+
+  .open {
+    .menu {
+      transform: translateX(0);
+      box-shadow: 0 0 0 9999px rgba(41, 41, 41, 0.6);
+    }
+  }
+}
+
+.active-page:before {
+  content: '• ';
+}
+
+.active-page:hover {
+  color: inherit;
+  cursor: default;
+}

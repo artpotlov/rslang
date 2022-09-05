@@ -1,0 +1,24 @@
+<h2 class="text-3xl text-center">Авторизация</h2>
+<form class="flex flex-col gap-3">
+  <label>
+    <span class="block text-xs mb-1">Email</span>
+    <input type="email" placeholder="Введите e-mail" data-role="auth__input-email" required>
+  </label>
+  <label>
+    <span class="block text-xs mb-1">Пароль</span>
+    <input type="password" placeholder="Введите пароль" data-role="auth__input-password" required>
+  </label>
+  <button data-role="auth__btn-login"
+          class="px-2 py-2 bg-indigo-500 rounded text-white transition-colors hover:bg-indigo-400 active:bg-indigo-600 disabled:bg-indigo-500">
+    Войти
+  </button>
+</form>
+<div class="hidden text-red-500" data-role="auth__message">Неверный логин или пароль</div>
+<div>
+  <p class="text-slate-400">Ещё нет аккаунта?
+    <button data-role="auth__btn-form-registration"
+            class="inline-block font-bold text-indigo-600 transition-colors hover:text-indigo-400 active:text-indigo-600">
+      Создать
+    </button>
+  </p>
+</div>
