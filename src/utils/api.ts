@@ -93,7 +93,10 @@ export const createUserWord = async (
   };
 };
 
-export const getUserWord = async (userData: TUserData, idWord: string): Promise<TUserWordResponse> => {
+export const getUserWord = async (
+  userData: TUserData,
+  idWord: string,
+): Promise<TUserWordResponse> => {
   const { userId, token } = userData;
   const url = `${API_URL}/users/${userId}/words/${idWord}`;
   const customHeaders = { Authorization: `Bearer ${token}` };

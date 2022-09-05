@@ -14,7 +14,7 @@ export const formingStatisticsShort = (params: IStatistic) => {
   const sprintGame = lastChange?.sprintGame || DEFAULT_STATISTICS;
   const audioGame = lastChange?.audioGame || DEFAULT_STATISTICS;
   const newWords = audioGame.countNewWords + sprintGame.countNewWords;
-  const learnedWords = lastChange.learnedWords;
+  const { learnedWords } = lastChange;
   const percentCorrectAnswer =
     Math.round(
       ((sprintGame.countCorrectAnswer + audioGame.countCorrectAnswer) /

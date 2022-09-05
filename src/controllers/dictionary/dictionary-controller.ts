@@ -27,11 +27,17 @@ import { transformDateToBack } from '../../helpers/transformDate';
 
 class DictionaryController {
   dictionaryContentElement;
+
   dictionaryElement;
+
   dataDictionary;
+
   soundData: HTMLAudioElement[] | [];
+
   userData;
+
   paramsDictionary;
+
   isDifficultGroup;
 
   constructor(
@@ -151,6 +157,7 @@ class DictionaryController {
       if (this.isDifficultGroup) {
         card.classList.add(DINAMIC_CLASSES.invisible);
       } else {
+        // eslint-disable-next-line no-param-reassign
         wordData.difficulty = StatusDifficulty.HARD;
         icon.classList.toggle(DINAMIC_CLASSES.iconWordDifficult);
         icon.classList.remove('cursor-pointer');
@@ -200,7 +207,8 @@ class DictionaryController {
     if (!this.userData) return;
     const responseStats = await getStatistics(this.userData);
     checkRequest(responseStats.status);
-    let { learnedWords, optional } = responseStats.params;
+    const { optional } = responseStats.params;
+    let { learnedWords } = responseStats.params;
     const currentDate = transformDateToBack();
     learnedWords += 1;
     if (currentDate === optional.lastChange.date) {
@@ -226,6 +234,7 @@ class DictionaryController {
       checkRequest(status);
       callback();
     }
+    // eslint-disable-next-line no-param-reassign
     wordData.optional = wordData.optional
       ? { ...wordData.optional, learned: true }
       : { learned: true };

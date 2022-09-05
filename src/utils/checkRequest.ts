@@ -12,7 +12,7 @@ const checkRequest = (status: number) => {
       router.redirectTo('#auth');
       break;
     default:
-      console.log(status);
+      break;
   }
 };
 
