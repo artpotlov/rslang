@@ -98,10 +98,18 @@ class DictionaryController {
     if (isLearnedPage) this.setLearnedPage();
     this.setGroupButtons(isLearnedPage);
     this.setPaginationView(isLearnedPage);
+    const dataDictionary = this.dataDictionary.map((word) => {
+      const audioGame = word.optional?.audioGame;
+      const sprintGame = word.optional?.sprintGame;
+      const correctAnswer =
+        (audioGame?.countCorrectAnswer || 0) + (sprintGame?.countCorrectAnswer || 0);
+      const wrongAnswer = (audioGame?.countWrongAnswer || 0) + (sprintGame?.countWrongAnswer || 0);
+      return { ...word, correctAnswer, wrongAnswer };
+    });
     this.dictionaryContentElement.innerHTML = templateCard({
       API_URL,
       idUser: this.userData?.userId,
-      dataDictionary: this.dataDictionary,
+      dataDictionary,
       DINAMIC_CLASSES,
       isDifficultGroup: this.isDifficultGroup,
     });

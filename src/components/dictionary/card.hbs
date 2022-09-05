@@ -20,8 +20,8 @@
         {{else}}
         <i class='bi bi-puzzle text-2xl 
                  {{#if ../isDifficultGroup}}cursor-pointer{{/if}}
-                 {{#setDifficultClass difficulty ../DINAMIC_CLASSES.iconWordDifficult 'cursor-pointer'}}{{/setDifficultClass}}'
-           data-role='dictionary__difficult' title='Сложное'></i>
+                 {{#setDifficultClass difficulty ../DINAMIC_CLASSES.iconWordDifficult '
+          cursor-pointer'}}{{/setDifficultClass}}' data-role='dictionary__difficult' title='Сложное'></i>
         {{/if}}
         <i class='bi bi-mortarboard text-2xl
                  {{#if optional/learned}}{{../DINAMIC_CLASSES.iconWordLearned}}{{^}}cursor-pointer{{/if}}'
@@ -44,8 +44,8 @@
     </div>
     {{#if ../idUser}}
     <div class="flex gap-2 flex-wrap ml-auto">
-      <span>Правильных ответов: 0</span>
-      <span>Неправильных ответов: 0</span>
+      <span>Правильных ответов: {{correctAnswer}}</span>
+      <span>Неправильных ответов: {{wrongAnswer}}</span>
     </div>
     {{/if}}
   </div>
