@@ -99,19 +99,6 @@ export const updateWordStat = (
     params.optional.audioGame = userWord.optional.audioGame;
   }
 
-  if (
-    !userWord?.optional.learned &&
-    userWord?.optional.countRepeated &&
-    ((userWord?.difficulty === 'easy' && userWord.optional.countRepeated >= 2) ||
-      (userWord?.difficulty === 'hard' && userWord.optional.countRepeated >= 4))
-  ) {
-    params.optional.learned = true;
-    params.optional.countRepeated = 0;
-    updateWordParams({ userId, token, wordId, params });
-    gameStatistics.learnedWords += 1;
-    return;
-  }
-
   if (typeGame === 'sprint') {
     const countCorrectAnswer = userWord?.optional.sprintGame?.countCorrectAnswer || 0;
     const countWrongAnswer = userWord?.optional.sprintGame?.countWrongAnswer || 0;
@@ -130,6 +117,19 @@ export const updateWordStat = (
       countCorrectAnswer: countCorrectAnswer + Number(isCorrectAnswer),
       countWrongAnswer: countWrongAnswer + Number(!isCorrectAnswer),
     };
+  }
+
+  if (
+    !userWord?.optional.learned &&
+    userWord?.optional.countRepeated &&
+    ((userWord?.difficulty === 'easy' && userWord.optional.countRepeated >= 2) ||
+      (userWord?.difficulty === 'hard' && userWord.optional.countRepeated >= 4))
+  ) {
+    params.optional.learned = true;
+    params.optional.countRepeated = 0;
+    updateWordParams({ userId, token, wordId, params });
+    gameStatistics.learnedWords += 1;
+    return;
   }
 
   if (typeof params.optional.countRepeated !== 'number') return;
