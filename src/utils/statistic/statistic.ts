@@ -91,6 +91,14 @@ export const updateWordStat = (
     return;
   }
 
+  if (userWord?.optional.sprintGame) {
+    params.optional.sprintGame = userWord.optional.sprintGame;
+  }
+
+  if (userWord?.optional.audioGame) {
+    params.optional.audioGame = userWord.optional.audioGame;
+  }
+
   if (
     !userWord?.optional.learned &&
     userWord?.optional.countRepeated &&
