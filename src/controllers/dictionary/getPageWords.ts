@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 import { GROUP_DIFFICULT, KEYS_LS, StatusDifficulty } from '../../const';
 import { IObjectString, TDataDictionary, TUserData } from '../../types/types';
 import { getAggregatedWords, getChunkWords, getUserWord } from '../../utils/api';
@@ -19,10 +21,14 @@ const setDataWordsUser = async (
 };
 
 const getCommonGroupPage = async (
-  paramsDictionary: IObjectString,
+  { group, page }: IObjectString,
   userData: TUserData | null,
 ): Promise<TDataDictionary[]> => {
-  const { params } = await getChunkWords(paramsDictionary);
+  const sendParams = {
+    group: `${Number(group) - 1}`,
+    page: `${Number(page) - 1}`,
+  };
+  const { params } = await getChunkWords(sendParams);
   if (!params) return [];
   if (!userData) return params;
   return setDataWordsUser(userData, params);
@@ -42,9 +48,11 @@ const getDifficultGroupPage = async (userData: TUserData) => {
 const getPageWords = async (paramsDictionary: IObjectString): Promise<TDataDictionary[]> => {
   const isDifficultGroup = paramsDictionary.group === GROUP_DIFFICULT;
   const userData: TUserData | null = getLSData(KEYS_LS.userData);
-  return isDifficultGroup && userData
-    ? await getDifficultGroupPage(userData)
-    : await getCommonGroupPage(paramsDictionary, userData);
+  const response =
+    isDifficultGroup && userData
+      ? await getDifficultGroupPage(userData)
+      : await getCommonGroupPage(paramsDictionary, userData);
+  return response;
 };
 
 export default getPageWords;

@@ -1,5 +1,11 @@
-import { IObjectString, TDataDictionary, TUserData, TUserWord } from '../../types/types';
-import { createUserWord, updateUserWord } from '../../utils/api';
+import {
+  IObjectString,
+  IStatisticInput,
+  TDataDictionary,
+  TUserData,
+  TUserWord,
+} from '../../types/types';
+import { createUserWord, getStatistics, updateStatistics, updateUserWord } from '../../utils/api';
 import templateCard from '../../components/dictionary/card.hbs';
 import groupButtonsTemplate from '../../components/dictionary/groupButtons.hbs';
 import {
@@ -16,15 +22,22 @@ import { getLSData } from '../../utils/local-storage';
 import checkRequest from '../../utils/checkRequest';
 import getPageWords from './getPageWords';
 import setPagination from '../pagination/setPagination';
-import checkLernedPage from '../../helpers/checkLernedPage';
+import checkLearnedPage from '../../helpers/checkLearnedPage';
+import { transformDateToBack } from '../../helpers/transformDate';
 
 class DictionaryController {
   dictionaryContentElement;
+
   dictionaryElement;
+
   dataDictionary;
+
   soundData: HTMLAudioElement[] | [];
+
   userData;
+
   paramsDictionary;
+
   isDifficultGroup;
 
   constructor(
@@ -43,10 +56,10 @@ class DictionaryController {
     this.isDifficultGroup = paramsDictionary.group === GROUP_DIFFICULT;
   }
 
-  setPaginationView = (isLernedPage = true) => {
+  setPaginationView = (isLearnedPage = true) => {
     const { page, group } = this.paramsDictionary;
     if (group !== GROUP_DIFFICULT) {
-      setPagination(this.dictionaryElement, isLernedPage, MAX_PAGE_DICTIONARY, +page, +group);
+      setPagination(this.dictionaryElement, isLearnedPage, MAX_PAGE_DICTIONARY, +page, +group);
     }
   };
 
@@ -55,10 +68,17 @@ class DictionaryController {
     if (paginationElement instanceof HTMLElement) paginationElement.remove();
   };
 
-  setGroupButtons = (isLernedPage = true) => {
+  setGroupButtons = (isLearnedPage = true) => {
+    const { group, page } = this.paramsDictionary;
     this.dictionaryElement.insertAdjacentHTML(
       'afterbegin',
-      groupButtonsTemplate({ userData: this.userData, DINAMIC_CLASSES, isLernedPage }),
+      groupButtonsTemplate({
+        userData: this.userData,
+        DINAMIC_CLASSES,
+        isLearnedPage,
+        group,
+        page,
+      }),
     );
   };
 
@@ -69,19 +89,27 @@ class DictionaryController {
     if (buttonGamesElement instanceof HTMLElement) buttonGamesElement.remove();
   };
 
-  setLernedPage = () => {
-    this.dictionaryContentElement.classList.add(...DINAMIC_CLASSES.bgLernedPage);
+  setLearnedPage = () => {
+    this.dictionaryContentElement.classList.add(...DINAMIC_CLASSES.bgLearnedPage);
   };
 
   setDictionaryView = () => {
-    const isLernedPage = checkLernedPage(this.dataDictionary);
-    if (isLernedPage) this.setLernedPage();
-    this.setGroupButtons(isLernedPage);
-    this.setPaginationView(isLernedPage);
+    const isLearnedPage = checkLearnedPage(this.dataDictionary);
+    if (isLearnedPage) this.setLearnedPage();
+    this.setGroupButtons(isLearnedPage);
+    this.setPaginationView(isLearnedPage);
+    const dataDictionary = this.dataDictionary.map((word) => {
+      const audioGame = word.optional?.audioGame;
+      const sprintGame = word.optional?.sprintGame;
+      const correctAnswer =
+        (audioGame?.countCorrectAnswer || 0) + (sprintGame?.countCorrectAnswer || 0);
+      const wrongAnswer = (audioGame?.countWrongAnswer || 0) + (sprintGame?.countWrongAnswer || 0);
+      return { ...word, correctAnswer, wrongAnswer };
+    });
     this.dictionaryContentElement.innerHTML = templateCard({
       API_URL,
       idUser: this.userData?.userId,
-      dataDictionary: this.dataDictionary,
+      dataDictionary,
       DINAMIC_CLASSES,
       isDifficultGroup: this.isDifficultGroup,
     });
@@ -137,8 +165,10 @@ class DictionaryController {
       if (this.isDifficultGroup) {
         card.classList.add(DINAMIC_CLASSES.invisible);
       } else {
+        // eslint-disable-next-line no-param-reassign
         wordData.difficulty = StatusDifficulty.HARD;
         icon.classList.toggle(DINAMIC_CLASSES.iconWordDifficult);
+        icon.classList.remove('cursor-pointer');
         card.classList.toggle(DINAMIC_CLASSES.cardWordDefault);
         card.classList.toggle(DINAMIC_CLASSES.cardWordDifficult);
       }
@@ -154,26 +184,50 @@ class DictionaryController {
   };
 
   clickLearned = async (wordData: TDataDictionary, icon: HTMLElement, card: HTMLElement) => {
-    if (icon.classList.contains(DINAMIC_CLASSES.iconWordLerned)) return;
-    const sendParams: TUserWord = { difficulty: StatusDifficulty.EASY, optional: { lerned: true } };
-    const setLernedCard = () => {
+    if (icon.classList.contains(DINAMIC_CLASSES.iconWordLearned)) return;
+    const sendParams: TUserWord = {
+      difficulty: StatusDifficulty.EASY,
+      optional: { learned: true },
+    };
+    const setLearnedCard = () => {
       if (this.isDifficultGroup) {
         card.classList.add(DINAMIC_CLASSES.invisible);
       } else {
-        icon.classList.add(DINAMIC_CLASSES.iconWordLerned);
+        icon.classList.add(DINAMIC_CLASSES.iconWordLearned);
+        icon.classList.remove('cursor-pointer');
         card
           .querySelector('[data-role="dictionary__difficult"]')
           ?.classList.add(DINAMIC_CLASSES.invisible);
         card.classList.remove(DINAMIC_CLASSES.cardWordDifficult, DINAMIC_CLASSES.cardWordDefault);
-        card.classList.add(DINAMIC_CLASSES.cardWordLerned);
+        card.classList.add(DINAMIC_CLASSES.cardWordLearned);
       }
     };
     const { optional } = wordData;
     if (optional) {
       sendParams.optional = { ...optional, ...sendParams.optional };
     }
-    await this.changeWord(wordData, sendParams, setLernedCard);
+    await this.changeWord(wordData, sendParams, setLearnedCard);
+    await this.updateStatistics();
     this.changeStylePage();
+  };
+
+  updateStatistics = async () => {
+    if (!this.userData) return;
+    const responseStats = await getStatistics(this.userData);
+    checkRequest(responseStats.status);
+    const { optional } = responseStats.params;
+    let { learnedWords } = responseStats.params;
+    const currentDate = transformDateToBack();
+    learnedWords += 1;
+    if (currentDate === optional.lastChange.date) {
+      optional.lastChange.learnedWords += 1;
+    } else {
+      optional.days.allDays.push(optional.lastChange);
+      optional.lastChange = { learnedWords: 1, date: currentDate };
+    }
+    const statistics: IStatisticInput = { params: { learnedWords, optional }, ...this.userData };
+    const { status } = await updateStatistics(statistics);
+    checkRequest(status);
   };
 
   changeWord = async (wordData: TDataDictionary, sendParams: TUserWord, callback: () => void) => {
@@ -188,17 +242,18 @@ class DictionaryController {
       checkRequest(status);
       callback();
     }
+    // eslint-disable-next-line no-param-reassign
     wordData.optional = wordData.optional
-      ? { ...wordData.optional, lerned: true }
-      : { lerned: true };
+      ? { ...wordData.optional, learned: true }
+      : { learned: true };
   };
 
   changeStylePage = () => {
-    if (!checkLernedPage(this.dataDictionary)) return;
+    if (!checkLearnedPage(this.dataDictionary)) return;
     this.deleteButtonGames();
     this.deletePagination();
     this.setPaginationView();
-    this.setLernedPage();
+    this.setLearnedPage();
   };
 }
 
@@ -209,6 +264,7 @@ export const initDictionaryController = async (paramsDictionary: IObjectString) 
     '[data-role="dictionary__content"]',
   );
   if (!(dictionaryContentElement instanceof HTMLElement)) return;
+  dictionaryContentElement.innerHTML = 'Загрузка...';
   const pageWords = await getPageWords(paramsDictionary);
   const userData: TUserData | null = getLSData(KEYS_LS.userData);
   const dictionaryController = new DictionaryController(

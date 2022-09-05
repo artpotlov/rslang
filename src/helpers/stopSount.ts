@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
+
 const stopSound = (soundData: HTMLAudioElement[]) => {
-  soundData.map((sound) => {
+  soundData.forEach((sound) => {
     sound.pause();
     sound.currentTime = 0;
   });

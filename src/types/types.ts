@@ -53,8 +53,15 @@ export interface IObjectString extends Record<string, string> {
 }
 
 export type TUserWord = {
+  // difficulty?: StatusDifficulty | null;
+  // optional?: Record<string, unknown>;
   difficulty?: StatusDifficulty | null;
-  optional?: Record<string, unknown>;
+  optional?: {
+    learned?: boolean;
+    countRepeated?: number;
+    sprintGame?: IGameWordStats;
+    audioGame?: IGameWordStats;
+  };
 };
 
 export type TUserWordResponse = {

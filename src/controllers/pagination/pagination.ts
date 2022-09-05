@@ -10,11 +10,11 @@ const getPagesData = (
   currentPage: number,
   curentGroup?: number,
 ) => {
-  const defaultVisiblePages = [0, maxPage - 1];
+  const defaultVisiblePages = [1, maxPage];
   const pages = Array(maxPage)
     .fill('')
     .map((_, index) => {
-      const page = index;
+      const page = index + 1;
       const isCurrent = currentPage === page;
 
       const isVisible =
@@ -29,7 +29,7 @@ const getPagesData = (
         (!defaultVisiblePages.includes(currentPage - 2) && currentPage - 2 === page) ||
         (!defaultVisiblePages.includes(currentPage + 2) && currentPage + 2 === page);
 
-      const dataPage = { page: page + 1, link: '', isCurrent, isVisible, isEmpty };
+      const dataPage = { page, link: '', isCurrent, isVisible, isEmpty };
 
       if (isVisible && !isEmpty && !isCurrent) {
         dataPage.link = getLink(baseUrl, page, curentGroup);
@@ -41,7 +41,7 @@ const getPagesData = (
 };
 
 const initPagination = (
-  isLernedPage: boolean,
+  isLearnedPage: boolean,
   maxPage: number,
   currentPage: number,
   curentGroup?: number,
@@ -63,7 +63,7 @@ const initPagination = (
     pages,
     nextLink,
     prevLink,
-    isLernedPage,
+    isLearnedPage,
   });
 };
 

@@ -1,4 +1,4 @@
-import transformDate from '../../helpers/transformDate';
+import { transformDateFromBack } from '../../helpers/transformDate';
 import { IStatistic, TChartData } from '../../types/types';
 
 const DEFAULT_STATISTICS = {
@@ -14,7 +14,7 @@ export const formingStatisticsShort = (params: IStatistic) => {
   const sprintGame = lastChange?.sprintGame || DEFAULT_STATISTICS;
   const audioGame = lastChange?.audioGame || DEFAULT_STATISTICS;
   const newWords = audioGame.countNewWords + sprintGame.countNewWords;
-  const learnedWords = lastChange.learnedWords;
+  const { learnedWords } = lastChange;
   const percentCorrectAnswer =
     Math.round(
       ((sprintGame.countCorrectAnswer + audioGame.countCorrectAnswer) /
@@ -33,18 +33,19 @@ export const formingStatisticsLong = (params: IStatistic) => {
   const learnedWordsForChart: Omit<TChartData, 'title'> = { labels: [], data: [] };
   if (!params) return { newWordsForChart, learnedWordsForChart };
   const { days, lastChange } = params.optional;
-  days.allDays.forEach((day) => {
+  days.allDays.forEach((day, index, allDays) => {
     const { learnedWords, date, sprintGame, audioGame } = day;
-    learnedWordsForChart.data.push(learnedWords);
-    learnedWordsForChart.labels.push(transformDate(date));
+    const learnedWordsDate = index ? learnedWords + allDays[index - 1].learnedWords : learnedWords;
+    learnedWordsForChart.data.push(learnedWordsDate);
+    learnedWordsForChart.labels.push(transformDateFromBack(date));
     newWordsForChart.data.push((audioGame?.countNewWords || 0) + (sprintGame?.countNewWords || 0));
-    newWordsForChart.labels.push(transformDate(date));
+    newWordsForChart.labels.push(transformDateFromBack(date));
   });
-  learnedWordsForChart.data.push(lastChange.learnedWords);
-  learnedWordsForChart.labels.push(transformDate(lastChange.date));
+  learnedWordsForChart.data.push(params.learnedWords);
+  learnedWordsForChart.labels.push(transformDateFromBack(lastChange.date));
   newWordsForChart.data.push(
     (lastChange.audioGame?.countNewWords || 0) + (lastChange.sprintGame?.countNewWords || 0),
   );
-  newWordsForChart.labels.push(transformDate(lastChange.date));
+  newWordsForChart.labels.push(transformDateFromBack(lastChange.date));
   return { newWordsForChart, learnedWordsForChart };
 };

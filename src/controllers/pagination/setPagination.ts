@@ -2,12 +2,12 @@ import initPagination from './pagination';
 
 const setPagination = (
   parent: HTMLElement,
-  isLernedPage: boolean,
+  isLearnedPage: boolean,
   maxPage: number,
   page: number,
   group?: number,
 ) => {
-  const paginationElement = initPagination(isLernedPage, maxPage, page, group);
+  const paginationElement = initPagination(isLearnedPage, maxPage, page, group);
   parent.insertAdjacentHTML('beforeend', paginationElement);
 };
 
