@@ -230,6 +230,12 @@ export type TTypeGame = 'sprint' | 'audio';
 
 export type TStatMode = 'sprint' | 'audio' | 'book';
 
+export type TChartData = {
+  title: string;
+  data: number[];
+  labels: string[];
+};
+
 export interface IAudioGameWords {
   word: IUserAggregateBase;
   word1: string;
