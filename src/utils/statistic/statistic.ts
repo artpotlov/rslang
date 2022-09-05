@@ -227,8 +227,9 @@ export const saveStatistics = async (type: TStatMode, auth: boolean) => {
 
   const remStats = remoteStatsStore[0];
 
-  if (remStats.optional.days.allDays.length > 0) {
-    const remAllDays = remStats.optional.days.allDays;
+  const remAllDays = remStats.optional.days.allDays;
+
+  if (remAllDays.length) {
     params.optional.days.allDays.push(...remAllDays);
   }
 
