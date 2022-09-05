@@ -23,6 +23,7 @@ const clickBtnAuth = () => {
     deleteLSData('userData');
     isAuth = false;
     updateBtnAuthView();
+    router.navigateTo('');
     return;
   }
 
