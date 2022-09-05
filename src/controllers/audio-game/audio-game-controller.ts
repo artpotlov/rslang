@@ -1,26 +1,26 @@
 import game from '../../components/audio-game/game.hbs';
 import resultTemplate from '../../components/audio-game/result.hbs';
 import loadingTemplate from '../../components/sprint-game/loading.hbs';
-import { getChunkWords, getChunkUserWords } from '../../utils/api';
+import { getChunkUserWords, getChunkWords } from '../../utils/api';
 import { getRandomNumber } from '../../utils/random-number';
-import { playSoundWord, playSoundRes } from '../sprint-game/audio'; // функция воспроизведения аудио использует sprint-game storage!
-import { audioGameSettings, successWords, wrongWords, resetStorage, words } from './storage';
+import { playSoundRes, playSoundWord } from '../sprint-game/audio'; // функция воспроизведения аудио использует sprint-game storage!
+import { audioGameSettings, resetStorage, successWords, words, wrongWords } from './storage';
 import { shuffle } from '../../utils/shuffle';
 import {
   IObjectString,
-  TDataDictionaryResponse,
-  IUserAggregateWordsResponse,
   IUserAggregateBase,
+  IUserAggregateWordsResponse,
   IUserData,
+  TDataDictionaryResponse,
 } from '../../types/types';
 import { API_URL } from '../../const';
 import { router } from '../../utils/router-storage';
 import { getLSData } from '../../utils/local-storage';
 import { checkUserAuth } from '../../utils/user/check-auth';
 import {
+  gameStatistics,
   resetGameStatistics,
   resetRemoteStatsStore,
-  gameStatistics,
   saveStatistics,
   updateWordStat,
 } from '../../utils/statistic/statistic';
@@ -146,9 +146,7 @@ async function startGame(element: HTMLElement, sendParams?: IObjectString) {
 
   if (!audioGameSettings.isRunGame) {
     if (sendParams) {
-      router.navigateTo(
-        `dictionary/${Number(sendParams.group) - 1}/${Number(sendParams.page) - 1}`,
-      );
+      router.navigateTo(`dictionary/${Number(sendParams.group)}/${Number(sendParams.page)}`);
       return;
     }
     router.navigateTo('dictionary');
@@ -262,11 +260,13 @@ async function clickBtns(target: EventTarget, element: HTMLElement, gameParams?:
         wrongWords.push(words[audioGameSettings.idx].word);
         wrongAnswer(target);
         playSoundRes(false);
+        gameStatistics.longSeries = 0;
         updateWordStat(words[audioGameSettings.idx].word, false, 'audio', audioGameSettings.isAuth);
       } else {
         audioGameSettings.score += 10;
         successWords.push(words[audioGameSettings.idx].word);
         playSoundRes(true);
+        gameStatistics.longSeries += 1;
         updateWordStat(words[audioGameSettings.idx].word, true, 'audio', audioGameSettings.isAuth);
       }
       rightAnswer();
