@@ -1,6 +1,5 @@
 import {
   IObjectString,
-  IStatistic,
   IStatisticInput,
   TDataDictionary,
   TUserData,
@@ -24,6 +23,7 @@ import checkRequest from '../../utils/checkRequest';
 import getPageWords from './getPageWords';
 import setPagination from '../pagination/setPagination';
 import checkLearnedPage from '../../helpers/checkLearnedPage';
+import { transformDateToBack } from '../../helpers/transformDate';
 
 class DictionaryController {
   dictionaryContentElement;
@@ -201,8 +201,14 @@ class DictionaryController {
     const responseStats = await getStatistics(this.userData);
     checkRequest(responseStats.status);
     let { learnedWords, optional } = responseStats.params;
+    const currentDate = transformDateToBack();
     learnedWords += 1;
-    optional.lastChange.learnedWords += 1;
+    if (currentDate === optional.lastChange.date) {
+      optional.lastChange.learnedWords += 1;
+    } else {
+      optional.days.allDays.push(optional.lastChange);
+      optional.lastChange = { learnedWords: 1, date: currentDate };
+    }
     const statistics: IStatisticInput = { params: { learnedWords, optional }, ...this.userData };
     const { status } = await updateStatistics(statistics);
     checkRequest(status);
