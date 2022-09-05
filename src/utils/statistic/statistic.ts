@@ -156,6 +156,20 @@ export const saveStatistics = async (type: TStatMode, auth: boolean) => {
       lastChange: {
         date: todayDate,
         learnedWords: type === 'book' ? 1 : gameStatistics.learnedWords,
+        sprintGame: {
+          countNewWords: 0,
+          countCorrectAnswer: 0,
+          countWords: 0,
+          longSeries: 0,
+          score: 0,
+        },
+        audioGame: {
+          countNewWords: 0,
+          countCorrectAnswer: 0,
+          countWords: 0,
+          longSeries: 0,
+          score: 0,
+        },
       },
       days: {
         allDays: [],
@@ -212,6 +226,12 @@ export const saveStatistics = async (type: TStatMode, auth: boolean) => {
   }
 
   const remStats = remoteStatsStore[0];
+
+  const remAllDays = remStats.optional.days.allDays;
+
+  if (remAllDays.length) {
+    params.optional.days.allDays.push(...remAllDays);
+  }
 
   if (remStats.optional.lastChange.date !== todayDate) {
     params.optional.days.allDays.push(remStats.optional.lastChange);
