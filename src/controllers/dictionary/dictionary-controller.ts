@@ -75,7 +75,7 @@ class DictionaryController {
       groupButtonsTemplate({
         userData: this.userData,
         DINAMIC_CLASSES,
-        isLearnedPage,
+        showGames: !isLearnedPage && !this.isDifficultGroup && this.userData,
         group,
         page,
       }),

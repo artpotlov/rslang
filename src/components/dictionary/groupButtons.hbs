@@ -22,9 +22,7 @@
                     {{DINAMIC_CLASSES.colorGroupSeven}}">сложные слова</a>
             {{/if}}
           </div>
-          {{#if isLearnedPage}}
-          {{else}}
-          {{#if userData}}
+          {{#if showGames}}
           <div class="flex gap-1" data-role='group-buttons__games'>
             <span class="py-2 text-sm font-medium">Игры:</span>
             <a href="/#audio/{{group}}/{{page}}"
@@ -32,7 +30,6 @@
             <a href="/#sprint-game/{{group}}/{{page}}"
               class="bg-white text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-[inset_0_0_15px_0_rgba(0,0,0,0.3)]">Спринт</a>
           </div>
-          {{/if}}
           {{/if}}
         </div>
       </div>
