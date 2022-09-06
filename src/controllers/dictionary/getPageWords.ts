@@ -36,6 +36,7 @@ const getCommonGroupPage = async (
 
 const getDifficultGroupPage = async (userData: TUserData) => {
   const queryParamsHardWord = {
+    wordsPerPage: '600',
     filter: JSON.stringify({ 'userWord.difficulty': StatusDifficulty.HARD }),
   };
   const { params, status } = await getAggregatedWords(userData, queryParamsHardWord);
