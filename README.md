@@ -69,7 +69,7 @@ RS Lang — приложение для изучения английского 
 
 Демо приложение доступно в Github Pages данного проекта.
 
-[Перейти](https://artpotlov.github.io/rslang)
+[Перейти](https://rslangapp.netlify.app)
 
 # Установка и запуск приложения
 
