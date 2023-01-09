@@ -1,4 +1,4 @@
-export const API_URL = 'https://rslang-team-sixteen.herokuapp.com';
+export const API_URL = 'https://rslang-service.onrender.com';
 
 export enum RequestMethod {
   GET = 'GET',
